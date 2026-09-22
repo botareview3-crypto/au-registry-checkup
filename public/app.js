@@ -181,7 +181,30 @@ function toggleTeam(team) {
     .catch(() => setSyncStatus("offline"));
 }
 
-// Pick up changes made from other phones without needing a manual refresh.
+// Pick up changes made from other phones instantly, without needing a
+// manual refresh: the server pushes state over this connection the moment
+// anyone toggles a checkbox.
+function connectLiveUpdates() {
+  const source = new EventSource("/api/events");
+  source.onmessage = event => {
+    try {
+      applyServerState(JSON.parse(event.data));
+      setSyncStatus("synced");
+      update();
+    } catch {
+      // ignore malformed/heartbeat frames
+    }
+  };
+  source.onerror = () => {
+    // Connection dropped (e.g. Render restart, network blip). The browser
+    // auto-retries EventSource on its own; the 20s poll below is a safety
+    // net in case that retry takes a while.
+    setSyncStatus("offline");
+  };
+}
+connectLiveUpdates();
+
+// Fallback poll in case the live connection above is down for a while.
 setInterval(() => {
   if (document.hidden) return;
   loadStateFromServer();

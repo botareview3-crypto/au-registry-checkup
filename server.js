@@ -35,6 +35,17 @@ function writeLocal(data) {
 // GitHub are both just backups of it.
 let memory = emptyData();
 
+// Live-update: every connected browser holds open an SSE connection here.
+// The moment someone toggles a checkbox we push the new state to all of
+// them, so other screens update instantly instead of waiting on a poll.
+const sseClients = new Set();
+function broadcastState() {
+  const payload = JSON.stringify({ checks: memory.checks, activity: memory.activity.slice(0, 50) });
+  for (const res of sseClients) {
+    res.write(`data: ${payload}\n\n`);
+  }
+}
+
 // Serialize GitHub writes so two quick taps can't race each other's sha.
 let pushQueue = Promise.resolve();
 function queuePush(message) {
@@ -90,8 +101,28 @@ app.post("/api/toggle", (req, res) => {
 
   writeLocal(memory);
   queuePush(`${entry.who} ${checked ? "checked" : "unchecked"} ${entry.teamName}`);
+  broadcastState();
 
   res.json({ ok: true, entry });
+});
+
+// Browsers connect here and keep the connection open; we push a fresh
+// state payload down it whenever someone toggles a checkbox.
+app.get("/api/events", (req, res) => {
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    Connection: "keep-alive"
+  });
+  res.write(": connected\n\n");
+  sseClients.add(res);
+
+  const heartbeat = setInterval(() => res.write(": ping\n\n"), 25000);
+
+  req.on("close", () => {
+    clearInterval(heartbeat);
+    sseClients.delete(res);
+  });
 });
 
 app.get("/healthz", (req, res) => {
