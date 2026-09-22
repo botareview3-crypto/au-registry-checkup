@@ -5,12 +5,12 @@
       "by": null
     },
     "1": {
-      "checked": true,
-      "by": "Joshua"
+      "checked": false,
+      "by": null
     },
     "3": {
-      "checked": true,
-      "by": "Joshua"
+      "checked": false,
+      "by": null
     },
     "4": {
       "checked": true,
@@ -30,6 +30,20 @@
     }
   },
   "activity": [
+    {
+      "teamId": 3,
+      "teamName": "CIDO-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:48.724Z"
+    },
+    {
+      "teamId": 1,
+      "teamName": "AUDA-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:48.438Z"
+    },
     {
       "teamId": 3,
       "teamName": "CIDO-Registry",
