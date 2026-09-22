@@ -8,6 +8,10 @@
       "checked": true,
       "by": "Joshua"
     },
+    "3": {
+      "checked": true,
+      "by": "Joshua"
+    },
     "4": {
       "checked": true,
       "by": "Joshua"
@@ -26,6 +30,13 @@
     }
   },
   "activity": [
+    {
+      "teamId": 3,
+      "teamName": "CIDO-Registry",
+      "checked": true,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:47.980Z"
+    },
     {
       "teamId": 0,
       "teamName": "ARBE-Registry",
