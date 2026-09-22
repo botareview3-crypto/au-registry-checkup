@@ -447,7 +447,9 @@
       "at": "2026-09-22T09:16:41.212Z"
     }
   ],
-  "doneUsers": [],
+  "doneUsers": [
+    "Yanet"
+  ],
   "customTeams": [
     {
       "id": "custom-muco51jb-31nv",
