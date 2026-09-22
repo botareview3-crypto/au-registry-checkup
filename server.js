@@ -14,11 +14,21 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 function emptyData() {
-  return { checks: {}, activity: [], doneUsers: [] };
+  return { checks: {}, activity: [], doneUsers: [], customTeams: [] };
 }
 
 const LOGIN_TYPES = ["au-registry-email", "au-domain-account"];
 const DEVICE_TYPES = ["hp-860-laptop", "old-domain-desktop", "dell-laptop"];
+
+// Every Outlook email in this app ends in @africanunion.org - registries
+// added at runtime follow the same convention as the built-in list: only
+// the local part is ever accepted, the domain is appended here.
+const EMAIL_DOMAIN = "@africanunion.org";
+function deriveInitials(name) {
+  const parts = name.trim().split(/\s+/).filter(Boolean).slice(0, 4);
+  const chars = parts.map(part => part[0]).join("").toUpperCase();
+  return chars.slice(0, 4) || "REG";
+}
 
 function sanitizeChecklist(checklist) {
   if (!checklist || typeof checklist !== "object") return null;
@@ -51,7 +61,7 @@ function normalizeCheck(raw) {
 function readLocal() {
   try {
     const raw = JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
-    return { checks: raw.checks || {}, activity: raw.activity || [], doneUsers: raw.doneUsers || [] };
+    return { checks: raw.checks || {}, activity: raw.activity || [], doneUsers: raw.doneUsers || [], customTeams: raw.customTeams || [] };
   } catch {
     return emptyData();
   }
@@ -72,7 +82,7 @@ let memory = emptyData();
 const sseClients = new Set();
 function broadcastState() {
   const checks = Object.fromEntries(Object.entries(memory.checks).map(([id, raw]) => [id, normalizeCheck(raw)]));
-  const payload = JSON.stringify({ checks, activity: memory.activity.slice(0, 50), doneUsers: memory.doneUsers });
+  const payload = JSON.stringify({ checks, activity: memory.activity.slice(0, 50), doneUsers: memory.doneUsers, customTeams: memory.customTeams });
   for (const res of sseClients) {
     res.write(`data: ${payload}\n\n`);
   }
@@ -97,7 +107,7 @@ async function bootstrapState() {
     await githubStore.ensureBranch();
     const remote = await githubStore.fetchRemote();
     if (remote) {
-      memory = { checks: remote.checks || {}, activity: remote.activity || [], doneUsers: remote.doneUsers || [] };
+      memory = { checks: remote.checks || {}, activity: remote.activity || [], doneUsers: remote.doneUsers || [], customTeams: remote.customTeams || [] };
       writeLocal(memory);
       console.log("[github-store] restored state from GitHub.");
     } else if (Object.keys(memory.checks).length) {
@@ -113,7 +123,49 @@ async function bootstrapState() {
 
 app.get("/api/state", (req, res) => {
   const checks = Object.fromEntries(Object.entries(memory.checks).map(([id, raw]) => [id, normalizeCheck(raw)]));
-  res.json({ checks, activity: memory.activity.slice(0, 50), doneUsers: memory.doneUsers, persistent: githubStore.enabled });
+  res.json({ checks, activity: memory.activity.slice(0, 50), doneUsers: memory.doneUsers, customTeams: memory.customTeams, persistent: githubStore.enabled });
+});
+
+// Adds a registry that isn't in the built-in list. It's stored server-side
+// (shared + persisted the same way as everything else) so once added it
+// shows up for every device and can be checked/unchecked exactly like the
+// original registries.
+app.post("/api/teams", (req, res) => {
+  const { name, email, title, who } = req.body || {};
+  const cleanName = (name || "").toString().trim().slice(0, 120);
+  if (!cleanName) return res.status(400).json({ error: "expected { name }" });
+
+  const emailLocal = (email || "").toString().trim().split("@")[0].slice(0, 120);
+  const cleanEmail = emailLocal ? `${emailLocal}${EMAIL_DOMAIN}` : "";
+  const cleanTitle = (title || "").toString().trim().slice(0, 120) || cleanName;
+  const whoName = (who || "Someone").toString().trim().slice(0, 60) || "Someone";
+
+  const team = {
+    id: `custom-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`,
+    name: cleanName,
+    email: cleanEmail,
+    title: cleanTitle,
+    initials: deriveInitials(cleanName)
+  };
+  memory.customTeams.push(team);
+
+  const entry = {
+    teamId: team.id,
+    teamName: team.name,
+    checked: false,
+    added: true,
+    who: whoName,
+    note: "",
+    at: new Date().toISOString()
+  };
+  memory.activity.unshift(entry);
+  memory.activity = memory.activity.slice(0, MAX_ACTIVITY);
+
+  writeLocal(memory);
+  queuePush(`${whoName} added registry ${team.name}`);
+  broadcastState();
+
+  res.json({ ok: true, team, entry });
 });
 
 app.post("/api/toggle", (req, res) => {

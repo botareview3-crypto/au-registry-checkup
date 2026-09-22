@@ -94,6 +94,57 @@ $("#nameInput").addEventListener("keydown", e => { if (e.key === "Enter") saveNa
 renderUserChip();
 if (!myName) openNameModal();
 
+// Add a registry that isn't in the built-in list. Posts to the server so
+// it's shared with every device right away, then it behaves exactly like
+// any other registry (checkbox, checklist, department grouping, export).
+function openAddRegistryModal() {
+  $("#arName").value = "";
+  $("#arTitle").value = "";
+  $("#arEmail").value = "";
+  $("#arHint").textContent = "It'll appear under \u201CGeneral Registry\u201D until it's grouped elsewhere.";
+  $("#arHint").classList.remove("complete");
+  $("#addRegistryOverlay").classList.add("open");
+  $("#arName").focus();
+}
+function closeAddRegistryModal() {
+  $("#addRegistryOverlay").classList.remove("open");
+}
+$("#addRegistryButton").addEventListener("click", () => {
+  if (!myName) { openNameModal(); return; }
+  openAddRegistryModal();
+});
+$("#addRegistryCancel").addEventListener("click", closeAddRegistryModal);
+$("#addRegistrySave").addEventListener("click", () => {
+  const name = ($("#arName").value || "").trim();
+  if (!name) {
+    $("#arHint").textContent = "Registry name is required.";
+    $("#arHint").classList.remove("complete");
+    $("#arName").focus();
+    return;
+  }
+  const title = ($("#arTitle").value || "").trim();
+  const emailLocal = emailLocalPart($("#arEmail").value);
+  const saveButton = $("#addRegistrySave");
+  saveButton.disabled = true;
+  fetch("/api/teams", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, title, email: emailLocal, who: myName || "Someone" })
+  })
+    .then(res => (res.ok ? res.json() : Promise.reject(new Error("bad response"))))
+    .then(({ team, entry }) => {
+      mergeCustomTeams([team]);
+      if (entry) { latestActivity = [entry, ...latestActivity].slice(0, 50); renderActivity(); }
+      closeAddRegistryModal();
+      update();
+    })
+    .catch(() => {
+      $("#arHint").textContent = "Couldn't add it — check your connection and try again.";
+      $("#arHint").classList.remove("complete");
+    })
+    .finally(() => { saveButton.disabled = false; });
+});
+
 // Optional note, asked for only when checking an item (not when unchecking).
 let pendingCheckTeam = null;
 function openNoteModal(team) {
@@ -323,10 +374,10 @@ function renderActivity() {
   const list = $("#activityList");
   if (!latestActivity.length) { list.innerHTML = `<p class="activity-empty">No activity yet.</p>`; return; }
   list.innerHTML = latestActivity.map(entry => `
-    <div class="activity-item ${entry.checked ? "" : "unchecked"}">
+    <div class="activity-item ${entry.added ? "" : entry.checked ? "" : "unchecked"}">
       <i class="activity-dot"></i>
       <div class="activity-text">
-        <span><b>${escapeHtml(entry.who)}</b> ${entry.checked ? "checked" : "unchecked"} <b>${escapeHtml(entry.teamName)}</b></span>
+        <span><b>${escapeHtml(entry.who)}</b> ${entry.added ? "added" : entry.checked ? "checked" : "unchecked"} <b>${escapeHtml(entry.teamName)}</b></span>
         <span class="activity-time">${timeAgo(entry.at)}</span>
       </div>
     </div>`).join("");
@@ -337,7 +388,7 @@ function showToast(entry) {
   const stack = $("#toastStack");
   const el = document.createElement("div");
   el.className = "toast";
-  el.innerHTML = `<b>${escapeHtml(entry.who)}</b> ${entry.checked ? "checked" : "unchecked"} ${escapeHtml(entry.teamName)}`;
+  el.innerHTML = `<b>${escapeHtml(entry.who)}</b> ${entry.added ? "added" : entry.checked ? "checked" : "unchecked"} ${escapeHtml(entry.teamName)}`;
   stack.appendChild(el);
   requestAnimationFrame(() => el.classList.add("show"));
   setTimeout(() => { el.classList.remove("show"); setTimeout(() => el.remove(), 300); }, 4000);
@@ -355,7 +406,32 @@ $("#notifButton").addEventListener("click", openActivityPanel);
 $("#activityClose").addEventListener("click", closeActivityPanel);
 $("#activityOverlay").addEventListener("click", closeActivityPanel);
 
+// Registries added at runtime (via the "+ Add registry" button) live on the
+// server alongside checks/activity, so every device sees them. This merges
+// any not-yet-seen ones from the server into the local `teams` array - it
+// only ever pushes new entries, never rebuilds the array, so every other
+// function that closed over `teams` keeps working unchanged.
+const knownCustomIds = new Set();
+function mergeCustomTeams(customTeams) {
+  (customTeams || []).forEach(custom => {
+    if (knownCustomIds.has(custom.id)) return;
+    knownCustomIds.add(custom.id);
+    teams.push({
+      id: custom.id,
+      name: custom.name,
+      email: custom.email || "",
+      initials: custom.initials || "REG",
+      title: custom.title || custom.name,
+      checked: false,
+      checkedBy: null,
+      note: "",
+      checklist: null
+    });
+  });
+}
+
 function applyServerState(data) {
+  mergeCustomTeams(data.customTeams);
   teams.forEach(team => {
     const raw = data.checks[team.id];
     const info = raw && typeof raw === "object" ? raw : { checked: Boolean(raw), by: null, note: "", checklist: null };

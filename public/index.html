@@ -108,6 +108,7 @@
                 <input id="searchInput" type="search" placeholder="Search teams or departments" />
               </label>
               <button class="filter-button" id="filterButton">Filter <span>⌄</span></button>
+              <button class="filter-button accent" id="addRegistryButton">+ Add registry</button>
             </div>
           </section>
 
@@ -247,6 +248,33 @@
         <div class="modal-actions">
           <button class="modal-skip" id="checklistCancel">Cancel</button>
           <button class="modal-save" id="checklistSave" disabled>Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="addRegistryOverlay">
+      <div class="modal-card">
+        <h3>Add a new registry</h3>
+        <p>Not on the list yet? Add it here — it'll show up for everyone right away and works exactly like the others.</p>
+        <div class="cl-field">
+          <label for="arName">Registry name</label>
+          <input type="text" id="arName" maxlength="120" placeholder="e.g. XYZ-Registry" autocomplete="off" />
+        </div>
+        <div class="cl-field">
+          <label for="arTitle">Department / description (optional)</label>
+          <input type="text" id="arTitle" maxlength="120" placeholder="e.g. XYZ Directorate" autocomplete="off" />
+        </div>
+        <div class="cl-field">
+          <label for="arEmail">Outlook email (optional)</label>
+          <div class="email-input-group">
+            <input type="text" id="arEmail" placeholder="registry-name" autocapitalize="off" autocorrect="off" spellcheck="false" />
+            <span class="email-suffix">@africanunion.org</span>
+          </div>
+        </div>
+        <p class="cl-hint" id="arHint">It'll appear under "General Registry" until it's grouped elsewhere.</p>
+        <div class="modal-actions">
+          <button class="modal-skip" id="addRegistryCancel">Cancel</button>
+          <button class="modal-save" id="addRegistrySave">Add registry</button>
         </div>
       </div>
     </div>
