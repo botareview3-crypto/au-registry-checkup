@@ -1,11 +1,22 @@
 {
   "checks": {
     "0": false,
+    "1": {
+      "checked": true,
+      "by": "Joshua"
+    },
     "7": false,
     "16": false,
     "20": false
   },
   "activity": [
+    {
+      "teamId": 1,
+      "teamName": "AUDA-Registry",
+      "checked": true,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:21.240Z"
+    },
     {
       "teamId": 0,
       "teamName": "ARBE-Registry",
