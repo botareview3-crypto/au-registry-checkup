@@ -20,9 +20,19 @@
       "checked": false,
       "by": null
     },
-    "20": false
+    "20": {
+      "checked": false,
+      "by": null
+    }
   },
   "activity": [
+    {
+      "teamId": 20,
+      "teamName": "MISD Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:24.663Z"
+    },
     {
       "teamId": 0,
       "teamName": "ARBE-Registry",
