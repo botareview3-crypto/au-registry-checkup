@@ -1,8 +1,15 @@
 {
   "checks": {
-    "0": true
+    "0": false
   },
   "activity": [
+    {
+      "teamId": 0,
+      "teamName": "ARBE-Registry",
+      "checked": false,
+      "who": "Zemen",
+      "at": "2026-09-22T09:16:44.192Z"
+    },
     {
       "teamId": 0,
       "teamName": "ARBE-Registry",
