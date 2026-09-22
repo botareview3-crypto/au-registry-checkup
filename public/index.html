@@ -173,6 +173,78 @@
       </div>
     </div>
 
+    <div class="modal-overlay" id="checklistOverlay">
+      <div class="modal-card wide">
+        <h3 id="checklistModalTitle">Registry Office Checklist</h3>
+        <p>Fill in every field below — this registry is marked checked automatically once it's complete.</p>
+
+        <div class="checklist-form">
+          <div class="cl-group">
+            <h4>Office Location</h4>
+            <div class="cl-field">
+              <label for="clBuilding">Building</label>
+              <input type="text" id="clBuilding" />
+            </div>
+            <div class="cl-field">
+              <label for="clFloor">Floor Number</label>
+              <input type="text" id="clFloor" />
+            </div>
+            <div class="cl-field">
+              <label for="clOffice">Office Number</label>
+              <input type="text" id="clOffice" />
+            </div>
+          </div>
+
+          <div class="cl-group">
+            <h4>Registry Handler</h4>
+            <div class="cl-field">
+              <label for="clFullName">Full Name</label>
+              <input type="text" id="clFullName" />
+            </div>
+            <div class="cl-field">
+              <label for="clEmail">Outlook Email</label>
+              <input type="email" id="clEmail" />
+            </div>
+          </div>
+
+          <div class="cl-group">
+            <h4>Login Account Type</h4>
+            <div class="cl-choice-group">
+              <label class="cl-choice">
+                <input type="radio" name="clLogin" value="au-registry-email" />
+                <span>African Union Registry Email (used as user account)</span>
+              </label>
+              <label class="cl-choice">
+                <input type="radio" name="clLogin" value="au-domain-account" />
+                <span>AU Domain Account (personal AU account)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="cl-group">
+            <h4>Assigned Device</h4>
+            <div class="cl-choice-group">
+              <label class="cl-choice">
+                <input type="radio" name="clDevice" value="hp-860-laptop" />
+                <span>AU New HP 860 Laptop</span>
+              </label>
+              <label class="cl-choice">
+                <input type="radio" name="clDevice" value="old-domain-desktop" />
+                <span>AU Old Domain Desktop</span>
+              </label>
+              <label class="cl-choice">
+                <input type="radio" name="clDevice" value="dell-laptop" />
+                <span>AU Dell Laptop</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <p class="cl-hint" id="clHint">Fill in every field to mark this registry checked.</p>
+        <button class="modal-skip" id="checklistCancel" style="width:100%">Cancel</button>
+      </div>
+    </div>
+
     <div class="toast-stack" id="toastStack"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>

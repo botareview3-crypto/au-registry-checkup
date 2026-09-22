@@ -17,12 +17,35 @@ function emptyData() {
   return { checks: {}, activity: [], doneUsers: [] };
 }
 
+const LOGIN_TYPES = ["au-registry-email", "au-domain-account"];
+const DEVICE_TYPES = ["hp-860-laptop", "old-domain-desktop", "dell-laptop"];
+
+function sanitizeChecklist(checklist) {
+  if (!checklist || typeof checklist !== "object") return null;
+  const clean = {
+    building: (checklist.building || "").toString().trim().slice(0, 120),
+    floor: (checklist.floor || "").toString().trim().slice(0, 60),
+    office: (checklist.office || "").toString().trim().slice(0, 60),
+    fullName: (checklist.fullName || "").toString().trim().slice(0, 120),
+    email: (checklist.email || "").toString().trim().slice(0, 160),
+    login: LOGIN_TYPES.includes(checklist.login) ? checklist.login : "",
+    device: DEVICE_TYPES.includes(checklist.device) ? checklist.device : ""
+  };
+  // Only keep it if every field is actually filled in - a half-filled
+  // checklist shouldn't be treated as a completed one.
+  const complete = Object.values(clean).every(value => value);
+  return complete ? clean : null;
+}
+
 // Older data stored a checkbox as a plain boolean; newer data stores
-// { checked, by, note } so we know who checked it, can block others from
-// unchecking it, and can attach an optional note. This reads either shape safely.
+// { checked, by, note, checklist } so we know who checked it, can block
+// others from unchecking it, and can attach the office checklist details.
+// This reads either shape safely.
 function normalizeCheck(raw) {
-  if (raw && typeof raw === "object") return { checked: Boolean(raw.checked), by: raw.by || null, note: raw.note || "" };
-  return { checked: Boolean(raw), by: null, note: "" };
+  if (raw && typeof raw === "object") {
+    return { checked: Boolean(raw.checked), by: raw.by || null, note: raw.note || "", checklist: sanitizeChecklist(raw.checklist) };
+  }
+  return { checked: Boolean(raw), by: null, note: "", checklist: null };
 }
 
 function readLocal() {
@@ -94,7 +117,7 @@ app.get("/api/state", (req, res) => {
 });
 
 app.post("/api/toggle", (req, res) => {
-  const { teamId, teamName, checked, who, note } = req.body || {};
+  const { teamId, teamName, checked, who, note, checklist } = req.body || {};
   if (teamId === undefined || teamId === null || typeof checked !== "boolean") {
     return res.status(400).json({ error: "expected { teamId, checked }" });
   }
@@ -108,7 +131,8 @@ app.post("/api/toggle", (req, res) => {
   }
 
   const cleanNote = checked ? (note || "").toString().trim().slice(0, 300) : "";
-  memory.checks[teamId] = { checked, by: checked ? whoName : null, note: cleanNote };
+  const cleanChecklist = checked ? sanitizeChecklist(checklist) : null;
+  memory.checks[teamId] = { checked, by: checked ? whoName : null, note: cleanNote, checklist: cleanChecklist };
   const entry = {
     teamId,
     teamName: (teamName || String(teamId)).toString().slice(0, 120),

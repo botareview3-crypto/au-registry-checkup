@@ -119,6 +119,75 @@ $("#noteSave").addEventListener("click", () => {
   if (team) { performToggle(team, true, text); update(); }
 });
 
+// Registry office checklist, shown when checking an item. It only marks
+// the item as checked once every field is filled in — no separate submit
+// step. Partial entries are kept in memory (not sent to the server) so a
+// closed-and-reopened form doesn't lose progress.
+const checklistDrafts = {};
+let pendingChecklistTeam = null;
+const LOGIN_TYPES = ["au-registry-email", "au-domain-account"];
+const DEVICE_TYPES = ["hp-860-laptop", "old-domain-desktop", "dell-laptop"];
+const LOGIN_LABELS = { "au-registry-email": "African Union Registry Email", "au-domain-account": "AU Domain Account" };
+const DEVICE_LABELS = { "hp-860-laptop": "AU New HP 860 Laptop", "old-domain-desktop": "AU Old Domain Desktop", "dell-laptop": "AU Dell Laptop" };
+
+function checklistDraftFor(team) {
+  return (checklistDrafts[team.id] ||= { building: "", floor: "", office: "", fullName: "", email: "", login: "", device: "" });
+}
+function readChecklistForm() {
+  return {
+    building: $("#clBuilding").value.trim(),
+    floor: $("#clFloor").value.trim(),
+    office: $("#clOffice").value.trim(),
+    fullName: $("#clFullName").value.trim(),
+    email: $("#clEmail").value.trim(),
+    login: (document.querySelector('input[name="clLogin"]:checked') || {}).value || "",
+    device: (document.querySelector('input[name="clDevice"]:checked') || {}).value || ""
+  };
+}
+function checklistComplete(draft) {
+  return Boolean(draft.building && draft.floor && draft.office && draft.fullName && draft.email && draft.login && draft.device);
+}
+function openChecklistModal(team) {
+  pendingChecklistTeam = team;
+  const draft = checklistDraftFor(team);
+  $("#checklistModalTitle").textContent = `Registry Office Checklist — ${team.name}`;
+  $("#clBuilding").value = draft.building;
+  $("#clFloor").value = draft.floor;
+  $("#clOffice").value = draft.office;
+  $("#clFullName").value = draft.fullName;
+  $("#clEmail").value = draft.email;
+  document.querySelectorAll('input[name="clLogin"]').forEach(r => { r.checked = r.value === draft.login; });
+  document.querySelectorAll('input[name="clDevice"]').forEach(r => { r.checked = r.value === draft.device; });
+  updateChecklistHint();
+  $("#checklistOverlay").classList.add("open");
+  $("#clBuilding").focus();
+}
+function closeChecklistModal() {
+  $("#checklistOverlay").classList.remove("open");
+  pendingChecklistTeam = null;
+}
+function updateChecklistHint() {
+  const team = pendingChecklistTeam;
+  if (!team) return;
+  const draft = readChecklistForm();
+  checklistDrafts[team.id] = draft;
+  const complete = checklistComplete(draft);
+  const hint = $("#clHint");
+  hint.textContent = complete ? "All set — marking this registry as checked…" : "Fill in every field to mark this registry checked.";
+  hint.classList.toggle("complete", complete);
+  if (complete) {
+    delete checklistDrafts[team.id];
+    closeChecklistModal();
+    performToggle(team, true, "", draft);
+    update();
+  }
+}
+document.querySelectorAll("#checklistOverlay input").forEach(input => {
+  input.addEventListener("input", updateChecklistHint);
+  input.addEventListener("change", updateChecklistHint);
+});
+$("#checklistCancel").addEventListener("click", closeChecklistModal);
+
 function renderSignoff() {
   const namesEl = $("#doneNames");
   const btn = $("#doneButton");
@@ -153,10 +222,17 @@ function exportToExcel() {
     Department: departmentFor(team),
     Checked: team.checked ? "Yes" : "No",
     "Checked By": team.checkedBy || "",
+    Building: team.checklist?.building || "",
+    Floor: team.checklist?.floor || "",
+    "Office Number": team.checklist?.office || "",
+    "Handler Name": team.checklist?.fullName || "",
+    "Handler Email": team.checklist?.email || "",
+    "Login Account Type": LOGIN_LABELS[team.checklist?.login] || "",
+    "Assigned Device": DEVICE_LABELS[team.checklist?.device] || "",
     Note: team.note || ""
   }));
   const ws = XLSX.utils.json_to_sheet(rows);
-  ws["!cols"] = [{ wch: 42 }, { wch: 34 }, { wch: 26 }, { wch: 9 }, { wch: 18 }, { wch: 40 }];
+  ws["!cols"] = [{ wch: 42 }, { wch: 34 }, { wch: 26 }, { wch: 9 }, { wch: 18 }, { wch: 22 }, { wch: 12 }, { wch: 14 }, { wch: 24 }, { wch: 30 }, { wch: 30 }, { wch: 22 }, { wch: 40 }];
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Registries");
 
@@ -219,10 +295,11 @@ $("#activityOverlay").addEventListener("click", closeActivityPanel);
 function applyServerState(data) {
   teams.forEach(team => {
     const raw = data.checks[team.id];
-    const info = raw && typeof raw === "object" ? raw : { checked: Boolean(raw), by: null, note: "" };
+    const info = raw && typeof raw === "object" ? raw : { checked: Boolean(raw), by: null, note: "", checklist: null };
     team.checked = Boolean(info.checked);
     team.checkedBy = info.by || null;
     team.note = info.note || "";
+    team.checklist = info.checklist || null;
   });
   localStorage.setItem(stateKey, JSON.stringify(data.checks));
   doneUsers = data.doneUsers || doneUsers;
@@ -248,17 +325,18 @@ function loadStateFromServer() {
     .catch(() => setSyncStatus("offline"));
 }
 
-function performToggle(team, checked, note) {
+function performToggle(team, checked, note, checklist) {
   team.checked = checked;
   team.checkedBy = checked ? (myName || "Someone") : null;
   team.note = checked ? (note || "") : "";
-  const snapshot = Object.fromEntries(teams.map(item => [item.id, { checked: item.checked, by: item.checkedBy, note: item.note || "" }]));
+  team.checklist = checked ? (checklist || null) : null;
+  const snapshot = Object.fromEntries(teams.map(item => [item.id, { checked: item.checked, by: item.checkedBy, note: item.note || "", checklist: item.checklist || null }]));
   localStorage.setItem(stateKey, JSON.stringify(snapshot));
   setSyncStatus("syncing");
   fetch("/api/toggle", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ teamId: team.id, teamName: team.name, checked: team.checked, who: myName || "Someone", note: team.note })
+    body: JSON.stringify({ teamId: team.id, teamName: team.name, checked: team.checked, who: myName || "Someone", note: team.note, checklist: team.checklist })
   })
     .then(res => {
       if (res.status === 403) {
@@ -295,9 +373,9 @@ function toggleTeam(team) {
   }
 
   if (wantChecked) {
-    // Ask for an optional note before checking it - performToggle runs
-    // once the person hits Save or Skip in that modal.
-    openNoteModal(team);
+    // Show the registry office checklist before checking it - performToggle
+    // runs automatically once every field in that form is filled in.
+    openChecklistModal(team);
     return;
   }
 
@@ -395,6 +473,7 @@ function renderGroups() {
             <strong>${team.name}</strong>
             <span>${team.email}</span>
             ${team.checked && team.checkedBy ? `<span class="checked-by">Checked by ${escapeHtml(team.checkedBy)}</span>` : ""}
+            ${team.checked && team.checklist ? `<span class="checked-by note-text">${escapeHtml(team.checklist.fullName)} · ${escapeHtml(team.checklist.building)}${team.checklist.floor ? `, floor ${escapeHtml(team.checklist.floor)}` : ""}${team.checklist.office ? `, office ${escapeHtml(team.checklist.office)}` : ""}</span>` : ""}
             ${team.checked && team.note ? `<span class="checked-by note-text">“${escapeHtml(team.note)}”</span>` : ""}
           </div>
           <div class="job-title">${team.title}</div>
@@ -440,10 +519,11 @@ window.addEventListener("storage", event => {
   const next = JSON.parse(event.newValue || "{}");
   teams.forEach(team => {
     const raw = next[team.id];
-    const info = raw && typeof raw === "object" ? raw : { checked: Boolean(raw), by: null, note: "" };
+    const info = raw && typeof raw === "object" ? raw : { checked: Boolean(raw), by: null, note: "", checklist: null };
     team.checked = Boolean(info.checked);
     team.checkedBy = info.by || null;
     team.note = info.note || "";
+    team.checklist = info.checklist || null;
   });
   update();
 });
