@@ -131,7 +131,15 @@ const LOGIN_LABELS = { "au-registry-email": "African Union Registry Email", "au-
 const DEVICE_LABELS = { "hp-860-laptop": "AU New HP 860 Laptop", "old-domain-desktop": "AU Old Domain Desktop", "dell-laptop": "AU Dell Laptop" };
 
 function checklistDraftFor(team) {
-  return (checklistDrafts[team.id] ||= { building: "", floor: "", office: "", fullName: "", email: "", login: "", device: "" });
+  // Seed the draft from the team's already-saved checklist (edit flow) the
+  // first time it's opened, so editing a checked registry starts from what
+  // was saved rather than a blank form.
+  if (!checklistDrafts[team.id]) {
+    checklistDrafts[team.id] = team.checklist
+      ? { building: "", floor: "", office: "", fullName: "", email: "", login: "", device: "", ...team.checklist }
+      : { building: "", floor: "", office: "", fullName: "", email: "", login: "", device: "" };
+  }
+  return checklistDrafts[team.id];
 }
 // Every Outlook email on this checklist ends in @africanunion.org - the
 // field only collects the part before the @ and this suffix is appended
@@ -160,7 +168,7 @@ function checklistComplete(draft) {
 function openChecklistModal(team) {
   pendingChecklistTeam = team;
   const draft = checklistDraftFor(team);
-  $("#checklistModalTitle").textContent = `Registry Office Checklist — ${team.name}`;
+  $("#checklistModalTitle").textContent = `${team.checked ? "Edit" : "Registry Office"} Checklist — ${team.name}`;
   $("#clBuilding").value = draft.building;
   $("#clFloor").value = draft.floor;
   $("#clOffice").value = draft.office;
@@ -183,19 +191,65 @@ function updateChecklistHint() {
   checklistDrafts[team.id] = draft;
   const complete = checklistComplete(draft);
   const hint = $("#clHint");
-  hint.textContent = complete ? "All set — marking this registry as checked…" : "Fill in every field to mark this registry checked.";
+  hint.textContent = complete ? "All set — click Save to mark this registry checked." : "Fill in every field, then click Save.";
   hint.classList.toggle("complete", complete);
-  if (complete) {
-    delete checklistDrafts[team.id];
-    closeChecklistModal();
-    performToggle(team, true, "", draft);
-    update();
-  }
+  $("#checklistSave").disabled = !complete;
 }
 document.querySelectorAll("#checklistOverlay input").forEach(input => {
   input.addEventListener("input", updateChecklistHint);
 });
 $("#checklistCancel").addEventListener("click", closeChecklistModal);
+$("#checklistSave").addEventListener("click", () => {
+  const team = pendingChecklistTeam;
+  if (!team) return;
+  const draft = readChecklistForm();
+  if (!checklistComplete(draft)) return;
+  delete checklistDrafts[team.id];
+  closeChecklistModal();
+  performToggle(team, true, team.note || "", draft);
+  update();
+});
+
+// Read-only view shown when clicking a registry you already checked, with
+// Edit (reopens the form pre-filled) and Mark as unchecked actions - so
+// clicking a completed row no longer silently wipes its checklist data.
+let pendingViewTeam = null;
+function checklistViewRows(team) {
+  const c = team.checklist || {};
+  const location = [c.building, c.floor ? `Floor ${c.floor}` : "", c.office ? `Office ${c.office}` : ""].filter(Boolean).join(", ");
+  const rows = [
+    ["Handler", c.fullName || "—"],
+    ["Email", c.email || "—"],
+    ["Location", location || "—"],
+    ["Login Account Type", LOGIN_LABELS[c.login] || "—"],
+    ["Assigned Device", DEVICE_LABELS[c.device] || "—"]
+  ];
+  if (team.note) rows.push(["Note", team.note]);
+  return rows;
+}
+function openChecklistView(team) {
+  pendingViewTeam = team;
+  $("#checklistViewTitle").textContent = team.name;
+  $("#clViewCheckedBy").textContent = team.checkedBy ? `Checked by ${team.checkedBy}` : "";
+  $("#checklistViewBody").innerHTML = checklistViewRows(team).map(([label, value]) => `
+    <div class="cl-view-row"><span class="cl-view-label">${escapeHtml(label)}</span><span class="cl-view-value">${escapeHtml(value)}</span></div>`).join("");
+  $("#checklistViewOverlay").classList.add("open");
+}
+function closeChecklistView() {
+  $("#checklistViewOverlay").classList.remove("open");
+  pendingViewTeam = null;
+}
+$("#checklistViewClose").addEventListener("click", closeChecklistView);
+$("#checklistViewEdit").addEventListener("click", () => {
+  const team = pendingViewTeam;
+  closeChecklistView();
+  if (team) openChecklistModal(team);
+});
+$("#checklistViewUncheck").addEventListener("click", () => {
+  const team = pendingViewTeam;
+  closeChecklistView();
+  if (team) { performToggle(team, false, ""); update(); }
+});
 
 function renderSignoff() {
   const namesEl = $("#doneNames");
@@ -373,22 +427,22 @@ function performToggle(team, checked, note, checklist) {
 }
 
 function toggleTeam(team) {
-  const wantChecked = !team.checked;
-
-  // Only the person who checked an item can uncheck it.
-  if (!wantChecked && team.checked && team.checkedBy && team.checkedBy !== myName) {
-    showLockNotice(team);
+  if (team.checked) {
+    // Only the person who checked an item can view/edit or unmark it.
+    if (team.checkedBy && team.checkedBy !== myName) {
+      showLockNotice(team);
+      return;
+    }
+    // Clicking a checked item shows its saved details, with Edit and
+    // Mark-as-unchecked actions - it no longer unchecks (and wipes the
+    // checklist) on a plain click.
+    openChecklistView(team);
     return;
   }
 
-  if (wantChecked) {
-    // Show the registry office checklist before checking it - performToggle
-    // runs automatically once every field in that form is filled in.
-    openChecklistModal(team);
-    return;
-  }
-
-  performToggle(team, false, "");
+  // Show the registry office checklist before checking it - Save runs once
+  // every field in the form is filled in.
+  openChecklistModal(team);
 }
 
 function showLockNotice(team) {
