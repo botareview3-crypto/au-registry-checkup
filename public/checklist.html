@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#154c4a" />
+    <title>Registry Office Checklist</title>
+    <link rel="icon" type="image/jpeg" href="assets/au-logo.jpg" />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .checklist-shell { max-width: 640px; margin: 0 auto; padding: 42px 22px 60px; }
+      .checklist-header { margin-bottom: 30px; }
+      .checklist-header h1 { margin: 0 0 6px; font: 800 clamp(24px, 3vw, 32px)/1.15 "Plus Jakarta Sans", sans-serif; letter-spacing: -1px; color: var(--ink); }
+      .checklist-header p { margin: 0; color: var(--muted); font-size: 13px; }
+      .cl-section { background: var(--white); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 22px 22px 26px; margin-bottom: 18px; }
+      .cl-section h2 { margin: 0 0 18px; font: 700 15px "Plus Jakarta Sans", sans-serif; letter-spacing: -.3px; color: var(--teal); }
+      .cl-field { margin-bottom: 16px; }
+      .cl-field:last-child { margin-bottom: 0; }
+      .cl-field label { display: block; font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+      .cl-field input[type="text"], .cl-field input[type="email"] {
+        width: 100%; height: 42px; border: 1px solid var(--line); border-radius: 9px;
+        padding: 0 13px; font-size: 13px; color: var(--ink); background: var(--canvas);
+        outline: 0; transition: border-color .15s, background .15s;
+      }
+      .cl-field input[type="text"]:focus, .cl-field input[type="email"]:focus { border-color: var(--teal); background: var(--white); }
+      .cl-choice-group { display: flex; flex-direction: column; gap: 9px; }
+      .cl-choice { display: flex; align-items: center; gap: 11px; border: 1.5px solid var(--line); border-radius: 11px; padding: 13px 15px; cursor: pointer; transition: border-color .15s, background .15s; }
+      .cl-choice:hover { background: #fbfdfc; }
+      .cl-choice input[type="radio"] { accent-color: var(--teal); width: 17px; height: 17px; margin: 0; flex-shrink: 0; }
+      .cl-choice span { font-size: 13px; color: var(--ink); }
+      .cl-choice:has(input:checked) { border-color: var(--teal); background: var(--mint); }
+      .cl-actions { display: flex; justify-content: flex-end; margin-top: 6px; }
+      .cl-submit { height: 44px; padding: 0 24px; border: 0; border-radius: 10px; background: var(--teal); color: #fff; font: 700 13px "DM Sans", sans-serif; }
+      .cl-submit:hover { background: #123f3d; }
+      @media (max-width: 520px) { .checklist-shell { padding: 26px 16px 40px; } .cl-section { padding: 18px 16px 22px; } }
+    </style>
+  </head>
+  <body>
+    <div class="checklist-shell">
+      <div class="checklist-header">
+        <h1>Registry Office Checklist</h1>
+        <p>Fill in your details below.</p>
+      </div>
+
+      <form id="checklistForm">
+        <section class="cl-section">
+          <h2>Office Location</h2>
+          <div class="cl-field">
+            <label for="building">Building</label>
+            <input type="text" id="building" name="building" />
+          </div>
+          <div class="cl-field">
+            <label for="floorNumber">Floor Number</label>
+            <input type="text" id="floorNumber" name="floorNumber" />
+          </div>
+          <div class="cl-field">
+            <label for="officeNumber">Office Number</label>
+            <input type="text" id="officeNumber" name="officeNumber" />
+          </div>
+        </section>
+
+        <section class="cl-section">
+          <h2>Registry Handler</h2>
+          <div class="cl-field">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" name="fullName" />
+          </div>
+          <div class="cl-field">
+            <label for="outlookEmail">Outlook Email</label>
+            <input type="email" id="outlookEmail" name="outlookEmail" />
+          </div>
+        </section>
+
+        <section class="cl-section">
+          <h2>Login Account Type</h2>
+          <div class="cl-choice-group">
+            <label class="cl-choice">
+              <input type="radio" name="loginAccountType" value="au-registry-email" required />
+              <span>African Union Registry Email (used as user account)</span>
+            </label>
+            <label class="cl-choice">
+              <input type="radio" name="loginAccountType" value="au-domain-account" />
+              <span>AU Domain Account (personal AU account)</span>
+            </label>
+          </div>
+        </section>
+
+        <section class="cl-section">
+          <h2>Assigned Device</h2>
+          <div class="cl-choice-group">
+            <label class="cl-choice">
+              <input type="radio" name="assignedDevice" value="hp-860-laptop" required />
+              <span>AU New HP 860 Laptop</span>
+            </label>
+            <label class="cl-choice">
+              <input type="radio" name="assignedDevice" value="old-domain-desktop" />
+              <span>AU Old Domain Desktop</span>
+            </label>
+            <label class="cl-choice">
+              <input type="radio" name="assignedDevice" value="dell-laptop" />
+              <span>AU Dell Laptop</span>
+            </label>
+          </div>
+        </section>
+
+        <div class="cl-actions">
+          <button type="submit" class="cl-submit">Submit</button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
