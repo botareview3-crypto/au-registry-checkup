@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#154c4a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Registry Checkup" />
+    <title>AU Registry Checkup</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <div class="brand-mark">AU</div>
+          <div>
+            <strong>Registry checkup</strong>
+            <span>Operations workspace</span>
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <p class="eyebrow">Workspace</p>
+          <button class="nav-item active" data-view="overview">
+            <span class="nav-icon">⌂</span>
+            Overview
+            <span class="nav-count" id="allCount">37</span>
+          </button>
+          <button class="nav-item" data-view="pending">
+            <span class="nav-icon">◷</span>
+            Needs checkup
+            <span class="nav-count" id="pendingCount">37</span>
+          </button>
+          <button class="nav-item" data-view="done">
+            <span class="nav-icon">✓</span>
+            Completed
+            <span class="nav-count" id="doneCount">0</span>
+          </button>
+        </div>
+
+        <div class="sidebar-section department-list">
+          <p class="eyebrow">Departments</p>
+          <div id="departmentNav"></div>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="mini-avatar">AU</div>
+          <div>
+            <strong>AU Operations</strong>
+            <span>Frontend preview</span>
+          </div>
+          <button class="more-button" aria-label="More options">•••</button>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <button class="menu-button" id="menuButton" aria-label="Open navigation">☰</button>
+          <div class="breadcrumb"><span>Workspace</span><b>/</b><strong>Registry checkup</strong></div>
+          <div class="topbar-actions">
+            <button class="icon-button" id="notifButton" aria-label="Activity">♧<i id="notifDot"></i></button>
+            <button class="user-chip" id="userChip" aria-label="Set your name"><span id="userInitials">?</span><strong id="userNameLabel">Set your name</strong><small>⌄</small></button>
+          </div>
+        </header>
+
+        <div class="page-content">
+          <section class="hero">
+            <div>
+              <p class="eyebrow accent">Tuesday, 22 September 2026</p>
+              <h1>Keep every registry ready.</h1>
+              <p class="hero-copy">Review team contacts by department and mark each registry as checked for today.</p>
+            </div>
+            <div class="hero-art" aria-hidden="true">
+              <span class="sun"></span><span class="leaf leaf-one"></span><span class="leaf leaf-two"></span><span class="spark">✦</span>
+            </div>
+          </section>
+
+          <section class="stats-grid" aria-label="Registry summary">
+            <article class="stat-card primary-stat">
+              <div class="stat-icon">✓</div>
+              <div><span>Today's progress</span><strong id="progressText">0%</strong></div>
+              <div class="progress-ring"><div id="progressRing"></div></div>
+            </article>
+            <article class="stat-card">
+              <div class="stat-icon soft-blue">◎</div>
+              <div><span>Total registries</span><strong id="totalText">37</strong></div>
+              <small>Across all departments</small>
+            </article>
+            <article class="stat-card">
+              <div class="stat-icon soft-yellow">◔</div>
+              <div><span>Remaining today</span><strong id="remainingText">37</strong></div>
+              <small>Still waiting for a check</small>
+            </article>
+          </section>
+
+          <section class="toolbar">
+            <div>
+              <p class="eyebrow">Your teams</p>
+              <h2 id="sectionTitle">All registries <span id="sectionCount">37</span></h2>
+            </div>
+            <div class="toolbar-actions">
+              <label class="search-box">
+                <span>⌕</span>
+                <input id="searchInput" type="search" placeholder="Search teams or departments" />
+              </label>
+              <button class="filter-button" id="filterButton">Filter <span>⌄</span></button>
+            </div>
+          </section>
+
+          <div class="filter-popover" id="filterPopover">
+            <button class="filter-option selected" data-filter="all">All teams</button>
+            <button class="filter-option" data-filter="checked">Checked only</button>
+            <button class="filter-option" data-filter="unchecked">Needs attention</button>
+          </div>
+
+          <section class="registry-groups" id="registryGroups"></section>
+
+          <footer class="page-footer">
+            <span><i class="status-dot"></i> <span id="syncStatus">Loading…</span></span>
+            <span>AU Registry Operations <b>·</b> Frontend preview</span>
+          </footer>
+        </div>
+      </main>
+    </div>
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <div class="activity-overlay" id="activityOverlay"></div>
+    <aside class="activity-panel" id="activityPanel" aria-label="Recent activity">
+      <div class="activity-head">
+        <strong>Recent activity</strong>
+        <button class="panel-close" id="activityClose" aria-label="Close">✕</button>
+      </div>
+      <div class="activity-list" id="activityList"><p class="activity-empty">No activity yet.</p></div>
+    </aside>
+
+    <div class="modal-overlay" id="nameOverlay">
+      <div class="modal-card">
+        <h3>Who's checking in?</h3>
+        <p>Your name is shown next to what you check off, so the team knows who reviewed what.</p>
+        <input type="text" id="nameInput" placeholder="e.g. Amara" maxlength="60" />
+        <button class="modal-save" id="nameSave">Save</button>
+      </div>
+    </div>
+
+    <div class="toast-stack" id="toastStack"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

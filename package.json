@@ -1,0 +1,15 @@
+{
+  "name": "au-registry-checkup",
+  "version": "1.0.0",
+  "description": "AU Registry Checkup - daily registry checklist",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

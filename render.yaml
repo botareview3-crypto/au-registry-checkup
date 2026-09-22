@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: au-registry-checkup
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: GITHUB_TOKEN
+        sync: false # set manually in the Render dashboard - never commit this
+      - key: GITHUB_REPO
+        sync: false # "yourname/au-registry-checkup"
+      - key: GITHUB_DATA_BRANCH
+        value: data-store
