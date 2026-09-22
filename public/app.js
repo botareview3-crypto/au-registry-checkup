@@ -466,7 +466,7 @@ function renderGroups() {
       ${members.map(team => {
         const lockedForMe = team.checked && team.checkedBy && team.checkedBy !== myName;
         return `
-        <div class="registry-row ${team.checked ? "checked" : ""}">
+        <div class="registry-row ${team.checked ? "checked" : ""}" data-row="${team.id}">
           <div class="initials">${team.initials}</div>
           <div class="registry-name">
             <strong>${team.name}</strong>
@@ -480,6 +480,16 @@ function renderGroups() {
         </div>`;
       }).join("")}
     </article>`).join("") : `<div class="empty-state"><strong>No registries found</strong>Try another search or clear your filters.</div>`;
+  // Clicking anywhere on a row opens the same checklist/toggle flow as the
+  // checkbox. The checkbox itself is skipped here since its own listener
+  // (attached below) already handles it - without the skip, a click on the
+  // checkbox would bubble up to the row and fire toggleTeam twice.
+  document.querySelectorAll("[data-row]").forEach(row => row.addEventListener("click", event => {
+    if (event.target.closest("[data-check]")) return;
+    const team = teams.find(item => item.id === Number(row.dataset.row));
+    toggleTeam(team);
+    update();
+  }));
   document.querySelectorAll("[data-check]").forEach(button => button.addEventListener("click", () => {
     const team = teams.find(item => item.id === Number(button.dataset.check));
     toggleTeam(team);
