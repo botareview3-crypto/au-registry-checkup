@@ -36,7 +36,7 @@ const teams = [
   ["SBOEA-Registry", "SBOEA-Registry@africanunion.org", "SBO", "Secretariat to the Board of External Auditors"],
   ["SupplyChain-Registry", "SupplyChain-Registry@africanunion.org", "SC", "Supply Chain Registry"],
   ["WGYD-Registry", "WGYD-Registry@AfricanUnion.org", "WGYD", "Women, Gender and Youth Directorate"]
-].map(([name, email, initials, title], id) => ({ id, name, email, initials, title, checked: false, checkedBy: null, note: "" }));
+].map(([name, email, initials, title], id) => ({ id, name, email, initials, title, checked: false, checkedBy: null, note: "", checklist: null }));
 
 const departmentRules = [
   ["Governance & Leadership", ["ODG", "OSC", "CDCP", "ODG", "SBO", "OLC", "OIO"]],
@@ -184,7 +184,6 @@ function updateChecklistHint() {
 }
 document.querySelectorAll("#checklistOverlay input").forEach(input => {
   input.addEventListener("input", updateChecklistHint);
-  input.addEventListener("change", updateChecklistHint);
 });
 $("#checklistCancel").addEventListener("click", closeChecklistModal);
 
