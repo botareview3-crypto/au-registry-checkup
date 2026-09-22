@@ -27,6 +27,13 @@
   },
   "activity": [
     {
+      "teamId": 0,
+      "teamName": "ARBE-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:45.841Z"
+    },
+    {
       "teamId": 7,
       "teamName": "ESTI-Registry",
       "checked": false,
