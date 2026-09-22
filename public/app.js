@@ -630,12 +630,17 @@ function renderGroups() {
   // checkbox would bubble up to the row and fire toggleTeam twice.
   document.querySelectorAll("[data-row]").forEach(row => row.addEventListener("click", event => {
     if (event.target.closest("[data-check]")) return;
-    const team = teams.find(item => item.id === Number(row.dataset.row));
+    // team.id is a plain number for the built-in registries but a string
+    // (e.g. "custom-abc123-xy9z") for ones added at runtime via "+ Add
+    // registry" - dataset values are always strings, so compare as strings
+    // rather than coercing with Number(), which turned custom ids into NaN
+    // and silently broke clicking/checking them.
+    const team = teams.find(item => String(item.id) === row.dataset.row);
     toggleTeam(team);
     update();
   }));
   document.querySelectorAll("[data-check]").forEach(button => button.addEventListener("click", () => {
-    const team = teams.find(item => item.id === Number(button.dataset.check));
+    const team = teams.find(item => String(item.id) === button.dataset.check);
     toggleTeam(team);
     update();
   }));
