@@ -36,6 +36,15 @@
   },
   "activity": [
     {
+      "teamId": "custom-muco51jb-31nv",
+      "teamName": "CMD",
+      "checked": false,
+      "added": true,
+      "who": "Joshua",
+      "note": "",
+      "at": "2026-09-22T12:47:00.359Z"
+    },
+    {
       "teamId": 0,
       "teamName": "ARBE-Registry",
       "checked": false,
@@ -341,5 +350,14 @@
       "at": "2026-09-22T09:16:41.212Z"
     }
   ],
-  "doneUsers": []
+  "doneUsers": [],
+  "customTeams": [
+    {
+      "id": "custom-muco51jb-31nv",
+      "name": "CMD",
+      "email": "paps-cmd-registry@africanunion.org",
+      "title": "PAPS",
+      "initials": "C"
+    }
+  ]
 }
