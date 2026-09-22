@@ -74,6 +74,21 @@
         "device": "hp-860-laptop"
       }
     },
+    "31": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "15",
+        "office": "1517",
+        "fullName": "Haile michael alemu",
+        "email": "alemuh@africanunion.org",
+        "phone": "0939910343",
+        "login": "old-au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
     "custom-mucp10hr-8w7z": {
       "checked": true,
       "by": "Zemen",
@@ -91,6 +106,14 @@
     }
   },
   "activity": [
+    {
+      "teamId": 31,
+      "teamName": "PMRM-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-22T13:26:55.698Z"
+    },
     {
       "teamId": 18,
       "teamName": "Main-Registry",
