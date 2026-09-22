@@ -40,6 +40,21 @@
       "checked": false,
       "by": null
     },
+    "18": {
+      "checked": true,
+      "by": "Yanet",
+      "note": "",
+      "checklist": {
+        "building": "A",
+        "floor": "Ground",
+        "office": "00",
+        "fullName": "Beyene Mesele",
+        "email": "beyeneM@africanunion.org",
+        "phone": "+251911692748",
+        "login": "au-domain-account",
+        "device": "dell-laptop"
+      }
+    },
     "20": {
       "checked": false,
       "by": null
@@ -76,6 +91,14 @@
     }
   },
   "activity": [
+    {
+      "teamId": 18,
+      "teamName": "Main-Registry",
+      "checked": true,
+      "who": "Yanet",
+      "note": "",
+      "at": "2026-09-22T13:16:05.972Z"
+    },
     {
       "teamId": "custom-mucp10hr-8w7z",
       "teamName": "CCP",
