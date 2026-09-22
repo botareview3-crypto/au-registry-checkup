@@ -70,7 +70,7 @@
         <div class="page-content">
           <section class="hero">
             <div>
-              <p class="eyebrow accent">Tuesday, 22 September 2026</p>
+              <p class="eyebrow accent" id="heroDate">Loading date…</p>
               <h1>Keep every registry ready.</h1>
               <p class="hero-copy">Review team contacts by department and mark each registry as checked for today.</p>
             </div>
@@ -157,7 +157,7 @@
       <div class="modal-card">
         <h3>Who's checking in?</h3>
         <p>Your name is shown next to what you check off, so the team knows who reviewed what.</p>
-        <input type="text" id="nameInput" placeholder="e.g. Amara" maxlength="60" />
+        <input type="text" id="nameInput" placeholder="e.g. Amara" maxlength="60" autocomplete="name" />
         <button class="modal-save" id="nameSave">Save</button>
       </div>
     </div>
@@ -200,7 +200,7 @@
             <h4>Registry Handler</h4>
             <div class="cl-field">
               <label for="clFullName">Full Name</label>
-              <input type="text" id="clFullName" />
+              <input type="text" id="clFullName" autocomplete="name" />
             </div>
             <div class="cl-field">
               <label for="clEmail">Outlook Email</label>
@@ -211,7 +211,7 @@
             </div>
             <div class="cl-field">
               <label for="clPhone">Phone Number</label>
-              <input type="tel" id="clPhone" placeholder="e.g. +251 9xx xxx xxx" autocomplete="off" />
+              <input type="tel" id="clPhone" placeholder="e.g. +251 9xx xxx xxx" autocomplete="tel" inputmode="tel" />
             </div>
           </div>
 

@@ -51,6 +51,11 @@ const departmentRules = [
 
 const $ = selector => document.querySelector(selector);
 
+// The hero banner used to have a hard-coded date that silently went stale
+// after the day it was written. Compute it fresh on every load instead.
+const heroDateEl = document.getElementById("heroDate");
+if (heroDateEl) heroDateEl.textContent = new Date().toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+
 const stateKey = "au-registry-checks"; // legacy cache key, still used as an offline fallback
 const userKey = "au-registry-user";
 let myName = (localStorage.getItem(userKey) || "").trim();
@@ -685,6 +690,32 @@ window.addEventListener("storage", event => {
   });
   update();
 });
+// On phone, dismissing a modal shouldn't require hunting for the tiny
+// Cancel/Close button — tapping the dimmed backdrop or pressing Esc closes
+// whichever one is open, matching how the activity panel already behaves.
+// Safe to do everywhere: checklist/add-registry field values are already
+// kept in `checklistDrafts` as you type, so closing this way never loses
+// in-progress input.
+const MODAL_CLOSERS = {
+  nameOverlay: closeNameModal,
+  noteOverlay: closeNoteModal,
+  checklistOverlay: closeChecklistModal,
+  addRegistryOverlay: closeAddRegistryModal,
+  checklistViewOverlay: closeChecklistView
+};
+Object.entries(MODAL_CLOSERS).forEach(([id, close]) => {
+  const overlay = document.getElementById(id);
+  if (!overlay) return;
+  overlay.addEventListener("click", event => { if (event.target === overlay) close(); });
+});
+document.addEventListener("keydown", event => {
+  if (event.key !== "Escape") return;
+  const openOverlay = document.querySelector(".modal-overlay.open");
+  if (openOverlay && MODAL_CLOSERS[openOverlay.id]) { MODAL_CLOSERS[openOverlay.id](); return; }
+  if ($("#activityPanel").classList.contains("open")) { closeActivityPanel(); return; }
+  if ($("#sidebar").classList.contains("open")) closeMenu();
+});
+
 update();
 renderSignoff();
 loadStateFromServer();

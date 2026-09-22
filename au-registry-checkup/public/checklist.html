@@ -32,7 +32,10 @@
       .cl-actions { display: flex; justify-content: flex-end; margin-top: 6px; }
       .cl-submit { height: 44px; padding: 0 24px; border: 0; border-radius: 10px; background: var(--teal); color: #fff; font: 700 13px "DM Sans", sans-serif; }
       .cl-submit:hover { background: #123f3d; }
-      @media (max-width: 520px) { .checklist-shell { padding: 26px 16px 40px; } .cl-section { padding: 18px 16px 22px; } }
+      @media (max-width: 850px) {
+        .checklist-shell { padding: 26px 16px 40px; } .cl-section { padding: 18px 16px 22px; }
+        .cl-field input[type="text"], .cl-field input[type="email"], .cl-field input[type="tel"] { font-size: 16px; }
+      }
     </style>
   </head>
   <body>
