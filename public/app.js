@@ -133,13 +133,23 @@ const DEVICE_LABELS = { "hp-860-laptop": "AU New HP 860 Laptop", "old-domain-des
 function checklistDraftFor(team) {
   return (checklistDrafts[team.id] ||= { building: "", floor: "", office: "", fullName: "", email: "", login: "", device: "" });
 }
+// Every Outlook email on this checklist ends in @africanunion.org - the
+// field only collects the part before the @ and this suffix is appended
+// automatically, so it can't be mistyped or left off.
+const EMAIL_DOMAIN = "@africanunion.org";
+function emailLocalPart(value) {
+  // Strip anything the user may have typed after (or including) "@", so
+  // pasting a full address still resolves to just the local part.
+  return (value || "").trim().split("@")[0];
+}
 function readChecklistForm() {
+  const emailLocal = emailLocalPart($("#clEmail").value);
   return {
     building: $("#clBuilding").value.trim(),
     floor: $("#clFloor").value.trim(),
     office: $("#clOffice").value.trim(),
     fullName: $("#clFullName").value.trim(),
-    email: $("#clEmail").value.trim(),
+    email: emailLocal ? `${emailLocal}${EMAIL_DOMAIN}` : "",
     login: (document.querySelector('input[name="clLogin"]:checked') || {}).value || "",
     device: (document.querySelector('input[name="clDevice"]:checked') || {}).value || ""
   };
@@ -155,7 +165,7 @@ function openChecklistModal(team) {
   $("#clFloor").value = draft.floor;
   $("#clOffice").value = draft.office;
   $("#clFullName").value = draft.fullName;
-  $("#clEmail").value = draft.email;
+  $("#clEmail").value = emailLocalPart(draft.email);
   document.querySelectorAll('input[name="clLogin"]').forEach(r => { r.checked = r.value === draft.login; });
   document.querySelectorAll('input[name="clDevice"]').forEach(r => { r.checked = r.value === draft.device; });
   updateChecklistHint();
