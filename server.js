@@ -17,6 +17,14 @@ function emptyData() {
   return { checks: {}, activity: [] };
 }
 
+// Older data stored a checkbox as a plain boolean; newer data stores
+// { checked, by } so we know who checked it and can block others from
+// unchecking it. This reads either shape safely.
+function normalizeCheck(raw) {
+  if (raw && typeof raw === "object") return { checked: Boolean(raw.checked), by: raw.by || null };
+  return { checked: Boolean(raw), by: null };
+}
+
 function readLocal() {
   try {
     const raw = JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
@@ -40,7 +48,8 @@ let memory = emptyData();
 // them, so other screens update instantly instead of waiting on a poll.
 const sseClients = new Set();
 function broadcastState() {
-  const payload = JSON.stringify({ checks: memory.checks, activity: memory.activity.slice(0, 50) });
+  const checks = Object.fromEntries(Object.entries(memory.checks).map(([id, raw]) => [id, normalizeCheck(raw)]));
+  const payload = JSON.stringify({ checks, activity: memory.activity.slice(0, 50) });
   for (const res of sseClients) {
     res.write(`data: ${payload}\n\n`);
   }
@@ -80,7 +89,8 @@ async function bootstrapState() {
 }
 
 app.get("/api/state", (req, res) => {
-  res.json({ checks: memory.checks, activity: memory.activity.slice(0, 50), persistent: githubStore.enabled });
+  const checks = Object.fromEntries(Object.entries(memory.checks).map(([id, raw]) => [id, normalizeCheck(raw)]));
+  res.json({ checks, activity: memory.activity.slice(0, 50), persistent: githubStore.enabled });
 });
 
 app.post("/api/toggle", (req, res) => {
@@ -88,12 +98,21 @@ app.post("/api/toggle", (req, res) => {
   if (teamId === undefined || teamId === null || typeof checked !== "boolean") {
     return res.status(400).json({ error: "expected { teamId, checked }" });
   }
-  memory.checks[teamId] = checked;
+  const whoName = (who || "Someone").toString().trim().slice(0, 60) || "Someone";
+  const current = normalizeCheck(memory.checks[teamId]);
+
+  // Only the person who checked an item may uncheck it. Checking an
+  // (already unchecked) item is always allowed.
+  if (!checked && current.checked && current.by && current.by !== whoName) {
+    return res.status(403).json({ error: "locked", by: current.by });
+  }
+
+  memory.checks[teamId] = { checked, by: checked ? whoName : null };
   const entry = {
     teamId,
     teamName: (teamName || String(teamId)).toString().slice(0, 120),
     checked,
-    who: (who || "Someone").toString().trim().slice(0, 60) || "Someone",
+    who: whoName,
     at: new Date().toISOString()
   };
   memory.activity.unshift(entry);

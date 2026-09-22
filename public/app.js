@@ -36,7 +36,7 @@ const teams = [
   ["SBOEA-Registry", "SBOEA-Registry@africanunion.org", "SBO", "Secretariat to the Board of External Auditors"],
   ["SupplyChain-Registry", "SupplyChain-Registry@africanunion.org", "SC", "Supply Chain Registry"],
   ["WGYD-Registry", "WGYD-Registry@AfricanUnion.org", "WGYD", "Women, Gender and Youth Directorate"]
-].map(([name, email, initials, title], id) => ({ id, name, email, initials, title, checked: false }));
+].map(([name, email, initials, title], id) => ({ id, name, email, initials, title, checked: false, checkedBy: null }));
 
 const departmentRules = [
   ["Governance & Leadership", ["ODG", "OSC", "CDCP", "ODG", "SBO", "OLC", "OIO"]],
@@ -139,7 +139,12 @@ $("#activityClose").addEventListener("click", closeActivityPanel);
 $("#activityOverlay").addEventListener("click", closeActivityPanel);
 
 function applyServerState(data) {
-  teams.forEach(team => { team.checked = Boolean(data.checks[team.id]); });
+  teams.forEach(team => {
+    const raw = data.checks[team.id];
+    const info = raw && typeof raw === "object" ? raw : { checked: Boolean(raw), by: null };
+    team.checked = Boolean(info.checked);
+    team.checkedBy = info.by || null;
+  });
   localStorage.setItem(stateKey, JSON.stringify(data.checks));
 
   const previousNewest = latestActivity[0] ? latestActivity[0].at : null;
@@ -163,8 +168,17 @@ function loadStateFromServer() {
 }
 
 function toggleTeam(team) {
-  team.checked = !team.checked;
-  const snapshot = Object.fromEntries(teams.map(item => [item.id, item.checked]));
+  const wantChecked = !team.checked;
+
+  // Only the person who checked an item can uncheck it.
+  if (!wantChecked && team.checked && team.checkedBy && team.checkedBy !== myName) {
+    showLockNotice(team);
+    return;
+  }
+
+  team.checked = wantChecked;
+  team.checkedBy = wantChecked ? (myName || "Someone") : null;
+  const snapshot = Object.fromEntries(teams.map(item => [item.id, { checked: item.checked, by: item.checkedBy }]));
   localStorage.setItem(stateKey, JSON.stringify(snapshot));
   setSyncStatus("syncing");
   fetch("/api/toggle", {
@@ -172,13 +186,39 @@ function toggleTeam(team) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ teamId: team.id, teamName: team.name, checked: team.checked, who: myName || "Someone" })
   })
-    .then(res => (res.ok ? res.json() : Promise.reject(new Error("bad response"))))
+    .then(res => {
+      if (res.status === 403) {
+        return res.json().then(body => Promise.reject(Object.assign(new Error("locked"), { locked: true, by: body.by })));
+      }
+      return res.ok ? res.json() : Promise.reject(new Error("bad response"));
+    })
     .then(({ entry }) => {
       setSyncStatus("synced");
       latestActivity = [entry, ...latestActivity].slice(0, 50);
       renderActivity();
     })
-    .catch(() => setSyncStatus("offline"));
+    .catch(err => {
+      if (err && err.locked) {
+        // Someone else's device beat us to it - snap back to their state.
+        team.checked = true;
+        team.checkedBy = err.by;
+        setSyncStatus("synced");
+        update();
+        showLockNotice(team);
+      } else {
+        setSyncStatus("offline");
+      }
+    });
+}
+
+function showLockNotice(team) {
+  const stack = $("#toastStack");
+  const el = document.createElement("div");
+  el.className = "toast";
+  el.innerHTML = `<b>${escapeHtml(team.checkedBy || "Someone else")}</b> checked this — only they can uncheck it`;
+  stack.appendChild(el);
+  requestAnimationFrame(() => el.classList.add("show"));
+  setTimeout(() => { el.classList.remove("show"); setTimeout(() => el.remove(), 300); }, 4000);
 }
 
 // Pick up changes made from other phones instantly, without needing a
@@ -253,13 +293,20 @@ function renderGroups() {
   $("#registryGroups").innerHTML = list.length ? Object.entries(groups).map(([department, members]) => `
     <article class="group-card">
       <div class="group-heading"><i class="group-color"></i><h3>${department}</h3><small>${members.length} ${members.length === 1 ? "registry" : "registries"}</small></div>
-      ${members.map(team => `
+      ${members.map(team => {
+        const lockedForMe = team.checked && team.checkedBy && team.checkedBy !== myName;
+        return `
         <div class="registry-row ${team.checked ? "checked" : ""}">
           <div class="initials">${team.initials}</div>
-          <div class="registry-name"><strong>${team.name}</strong><span>${team.email}</span></div>
+          <div class="registry-name">
+            <strong>${team.name}</strong>
+            <span>${team.email}</span>
+            ${team.checked && team.checkedBy ? `<span class="checked-by">Checked by ${escapeHtml(team.checkedBy)}</span>` : ""}
+          </div>
           <div class="job-title">${team.title}</div>
-          <button class="check-button ${team.checked ? "checked" : ""}" data-check="${team.id}" aria-label="Mark ${team.name} as checked">${team.checked ? "✓" : ""}</button>
-        </div>`).join("")}
+          <button class="check-button ${team.checked ? "checked" : ""} ${lockedForMe ? "locked" : ""}" data-check="${team.id}" aria-label="${lockedForMe ? `Checked by ${team.checkedBy} - only they can uncheck` : `Mark ${team.name} as checked`}" title="${lockedForMe ? `Checked by ${escapeHtml(team.checkedBy)}` : ""}">${team.checked ? "✓" : ""}</button>
+        </div>`;
+      }).join("")}
     </article>`).join("") : `<div class="empty-state"><strong>No registries found</strong>Try another search or clear your filters.</div>`;
   document.querySelectorAll("[data-check]").forEach(button => button.addEventListener("click", () => {
     const team = teams.find(item => item.id === Number(button.dataset.check));
@@ -297,7 +344,12 @@ $("#mobileOverlay").addEventListener("click", closeMenu);
 window.addEventListener("storage", event => {
   if (event.key !== stateKey) return;
   const next = JSON.parse(event.newValue || "{}");
-  teams.forEach(team => { team.checked = Boolean(next[team.id]); });
+  teams.forEach(team => {
+    const raw = next[team.id];
+    const info = raw && typeof raw === "object" ? raw : { checked: Boolean(raw), by: null };
+    team.checked = Boolean(info.checked);
+    team.checkedBy = info.by || null;
+  });
   update();
 });
 update();
