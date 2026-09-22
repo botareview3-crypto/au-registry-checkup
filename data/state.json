@@ -13,8 +13,8 @@
       "by": null
     },
     "4": {
-      "checked": true,
-      "by": "Joshua"
+      "checked": false,
+      "by": null
     },
     "7": {
       "checked": false,
@@ -30,6 +30,13 @@
     }
   },
   "activity": [
+    {
+      "teamId": 4,
+      "teamName": "CISSA-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:49.365Z"
+    },
     {
       "teamId": 3,
       "teamName": "CIDO-Registry",
