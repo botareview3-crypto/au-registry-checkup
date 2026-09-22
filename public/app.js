@@ -36,7 +36,7 @@ const teams = [
   ["SBOEA-Registry", "SBOEA-Registry@africanunion.org", "SBO", "Secretariat to the Board of External Auditors"],
   ["SupplyChain-Registry", "SupplyChain-Registry@africanunion.org", "SC", "Supply Chain Registry"],
   ["WGYD-Registry", "WGYD-Registry@AfricanUnion.org", "WGYD", "Women, Gender and Youth Directorate"]
-].map(([name, email, initials, title], id) => ({ id, name, email, initials, title, checked: false, checkedBy: null }));
+].map(([name, email, initials, title], id) => ({ id, name, email, initials, title, checked: false, checkedBy: null, note: "" }));
 
 const departmentRules = [
   ["Governance & Leadership", ["ODG", "OSC", "CDCP", "ODG", "SBO", "OLC", "OIO"]],
@@ -56,6 +56,7 @@ const userKey = "au-registry-user";
 let myName = (localStorage.getItem(userKey) || "").trim();
 let lastSeenActivityAt = localStorage.getItem("au-registry-activity-seen") || null;
 let latestActivity = [];
+let doneUsers = [];
 
 // The checklist state lives on the server (shared across every phone/device).
 // localStorage is kept as an instant-load cache and an offline fallback.
@@ -92,6 +93,83 @@ $("#nameSave").addEventListener("click", saveName);
 $("#nameInput").addEventListener("keydown", e => { if (e.key === "Enter") saveName(); });
 renderUserChip();
 if (!myName) openNameModal();
+
+// Optional note, asked for only when checking an item (not when unchecking).
+let pendingCheckTeam = null;
+function openNoteModal(team) {
+  pendingCheckTeam = team;
+  $("#noteModalTitle").textContent = `Add a note for ${team.name}?`;
+  $("#noteInput").value = "";
+  $("#noteOverlay").classList.add("open");
+  $("#noteInput").focus();
+}
+function closeNoteModal() {
+  $("#noteOverlay").classList.remove("open");
+  pendingCheckTeam = null;
+}
+$("#noteSkip").addEventListener("click", () => {
+  const team = pendingCheckTeam;
+  closeNoteModal();
+  if (team) { performToggle(team, true, ""); update(); }
+});
+$("#noteSave").addEventListener("click", () => {
+  const team = pendingCheckTeam;
+  const text = ($("#noteInput").value || "").trim();
+  closeNoteModal();
+  if (team) { performToggle(team, true, text); update(); }
+});
+
+function renderSignoff() {
+  const namesEl = $("#doneNames");
+  const btn = $("#doneButton");
+  const exportBtn = $("#exportButton");
+  const amDone = Boolean(myName) && doneUsers.some(name => name.toLowerCase() === myName.toLowerCase());
+  btn.textContent = amDone ? "Undo my done mark" : "Mark my review as done";
+  btn.classList.toggle("done", amDone);
+  namesEl.innerHTML = doneUsers.length
+    ? `<b>${doneUsers.length}</b> done: ${doneUsers.map(escapeHtml).join(", ")}`
+    : "No one has marked done yet.";
+  exportBtn.disabled = doneUsers.length < 2;
+}
+$("#doneButton").addEventListener("click", () => {
+  if (!myName) { openNameModal(); return; }
+  fetch("/api/done", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ who: myName })
+  })
+    .then(res => (res.ok ? res.json() : Promise.reject(new Error("bad response"))))
+    .then(({ doneUsers: next }) => { doneUsers = next; renderSignoff(); })
+    .catch(() => {});
+});
+$("#exportButton").addEventListener("click", () => {
+  if ($("#exportButton").disabled) return;
+  exportToExcel();
+});
+function exportToExcel() {
+  const rows = teams.map(team => ({
+    Registry: team.name,
+    Email: team.email,
+    Department: departmentFor(team),
+    Checked: team.checked ? "Yes" : "No",
+    "Checked By": team.checkedBy || "",
+    Note: team.note || ""
+  }));
+  const ws = XLSX.utils.json_to_sheet(rows);
+  ws["!cols"] = [{ wch: 42 }, { wch: 34 }, { wch: 26 }, { wch: 9 }, { wch: 18 }, { wch: 40 }];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Registries");
+
+  const summaryWs = XLSX.utils.json_to_sheet([
+    { Field: "Date generated", Value: new Date().toLocaleString() },
+    { Field: "Total registries", Value: teams.length },
+    { Field: "Checked", Value: teams.filter(t => t.checked).length },
+    { Field: "Reviewers marked done", Value: doneUsers.join(", ") }
+  ]);
+  XLSX.utils.book_append_sheet(wb, summaryWs, "Summary");
+
+  XLSX.writeFile(wb, `au-registry-checkup-${new Date().toISOString().slice(0, 10)}.xlsx`);
+}
 
 function timeAgo(iso) {
   const diffMs = Date.now() - new Date(iso).getTime();
@@ -141,11 +219,14 @@ $("#activityOverlay").addEventListener("click", closeActivityPanel);
 function applyServerState(data) {
   teams.forEach(team => {
     const raw = data.checks[team.id];
-    const info = raw && typeof raw === "object" ? raw : { checked: Boolean(raw), by: null };
+    const info = raw && typeof raw === "object" ? raw : { checked: Boolean(raw), by: null, note: "" };
     team.checked = Boolean(info.checked);
     team.checkedBy = info.by || null;
+    team.note = info.note || "";
   });
   localStorage.setItem(stateKey, JSON.stringify(data.checks));
+  doneUsers = data.doneUsers || doneUsers;
+  renderSignoff();
 
   const previousNewest = latestActivity[0] ? latestActivity[0].at : null;
   latestActivity = data.activity || [];
@@ -167,24 +248,17 @@ function loadStateFromServer() {
     .catch(() => setSyncStatus("offline"));
 }
 
-function toggleTeam(team) {
-  const wantChecked = !team.checked;
-
-  // Only the person who checked an item can uncheck it.
-  if (!wantChecked && team.checked && team.checkedBy && team.checkedBy !== myName) {
-    showLockNotice(team);
-    return;
-  }
-
-  team.checked = wantChecked;
-  team.checkedBy = wantChecked ? (myName || "Someone") : null;
-  const snapshot = Object.fromEntries(teams.map(item => [item.id, { checked: item.checked, by: item.checkedBy }]));
+function performToggle(team, checked, note) {
+  team.checked = checked;
+  team.checkedBy = checked ? (myName || "Someone") : null;
+  team.note = checked ? (note || "") : "";
+  const snapshot = Object.fromEntries(teams.map(item => [item.id, { checked: item.checked, by: item.checkedBy, note: item.note || "" }]));
   localStorage.setItem(stateKey, JSON.stringify(snapshot));
   setSyncStatus("syncing");
   fetch("/api/toggle", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ teamId: team.id, teamName: team.name, checked: team.checked, who: myName || "Someone" })
+    body: JSON.stringify({ teamId: team.id, teamName: team.name, checked: team.checked, who: myName || "Someone", note: team.note })
   })
     .then(res => {
       if (res.status === 403) {
@@ -209,6 +283,25 @@ function toggleTeam(team) {
         setSyncStatus("offline");
       }
     });
+}
+
+function toggleTeam(team) {
+  const wantChecked = !team.checked;
+
+  // Only the person who checked an item can uncheck it.
+  if (!wantChecked && team.checked && team.checkedBy && team.checkedBy !== myName) {
+    showLockNotice(team);
+    return;
+  }
+
+  if (wantChecked) {
+    // Ask for an optional note before checking it - performToggle runs
+    // once the person hits Save or Skip in that modal.
+    openNoteModal(team);
+    return;
+  }
+
+  performToggle(team, false, "");
 }
 
 function showLockNotice(team) {
@@ -302,6 +395,7 @@ function renderGroups() {
             <strong>${team.name}</strong>
             <span>${team.email}</span>
             ${team.checked && team.checkedBy ? `<span class="checked-by">Checked by ${escapeHtml(team.checkedBy)}</span>` : ""}
+            ${team.checked && team.note ? `<span class="checked-by note-text">“${escapeHtml(team.note)}”</span>` : ""}
           </div>
           <div class="job-title">${team.title}</div>
           <button class="check-button ${team.checked ? "checked" : ""} ${lockedForMe ? "locked" : ""}" data-check="${team.id}" aria-label="${lockedForMe ? `Checked by ${team.checkedBy} - only they can uncheck` : `Mark ${team.name} as checked`}" title="${lockedForMe ? `Checked by ${escapeHtml(team.checkedBy)}` : ""}">${team.checked ? "✓" : ""}</button>
@@ -346,11 +440,13 @@ window.addEventListener("storage", event => {
   const next = JSON.parse(event.newValue || "{}");
   teams.forEach(team => {
     const raw = next[team.id];
-    const info = raw && typeof raw === "object" ? raw : { checked: Boolean(raw), by: null };
+    const info = raw && typeof raw === "object" ? raw : { checked: Boolean(raw), by: null, note: "" };
     team.checked = Boolean(info.checked);
     team.checkedBy = info.by || null;
+    team.note = info.note || "";
   });
   update();
 });
 update();
+renderSignoff();
 loadStateFromServer();

@@ -9,13 +9,14 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Registry Checkup" />
     <title>AU Registry Checkup</title>
+    <link rel="icon" type="image/jpeg" href="assets/au-logo.jpg" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div class="app-shell">
       <aside class="sidebar" id="sidebar">
         <div class="brand">
-          <div class="brand-mark">AU</div>
+          <img class="brand-mark" src="assets/au-logo.jpg" alt="African Union logo" />
           <div>
             <strong>Registry checkup</strong>
             <span>Operations workspace</span>
@@ -118,6 +119,21 @@
 
           <section class="registry-groups" id="registryGroups"></section>
 
+          <section class="signoff-card">
+            <div class="signoff-head">
+              <div>
+                <p class="eyebrow">Review sign-off</p>
+                <h2>Wrap up today's checkup</h2>
+              </div>
+            </div>
+            <p class="signoff-copy">Once at least two people mark the review done, anyone can generate the Excel report for today.</p>
+            <div class="signoff-row">
+              <button class="signoff-button" id="doneButton">Mark my review as done</button>
+              <div class="signoff-names" id="doneNames"></div>
+            </div>
+            <button class="export-button" id="exportButton" disabled>Generate Excel report</button>
+          </section>
+
           <footer class="page-footer">
             <span><i class="status-dot"></i> <span id="syncStatus">Loading…</span></span>
             <span>AU Registry Operations <b>·</b> Frontend preview</span>
@@ -145,8 +161,21 @@
       </div>
     </div>
 
+    <div class="modal-overlay" id="noteOverlay">
+      <div class="modal-card">
+        <h3 id="noteModalTitle">Add a note?</h3>
+        <p>Optional — add any context for this registry. You can leave this blank.</p>
+        <textarea id="noteInput" rows="3" maxlength="300" placeholder="e.g. Confirmed via phone, mailbox was full, etc."></textarea>
+        <div class="modal-actions">
+          <button class="modal-skip" id="noteSkip">Skip</button>
+          <button class="modal-save" id="noteSave">Save note</button>
+        </div>
+      </div>
+    </div>
+
     <div class="toast-stack" id="toastStack"></div>
 
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
