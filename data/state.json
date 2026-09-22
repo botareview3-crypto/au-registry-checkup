@@ -1,6 +1,9 @@
 {
   "checks": {
-    "0": false,
+    "0": {
+      "checked": false,
+      "by": null
+    },
     "1": {
       "checked": true,
       "by": "Joshua"
@@ -9,7 +12,10 @@
       "checked": true,
       "by": "Joshua"
     },
-    "7": false,
+    "7": {
+      "checked": false,
+      "by": null
+    },
     "16": {
       "checked": false,
       "by": null
@@ -17,6 +23,20 @@
     "20": false
   },
   "activity": [
+    {
+      "teamId": 0,
+      "teamName": "ARBE-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:23.971Z"
+    },
+    {
+      "teamId": 7,
+      "teamName": "ESTI-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:23.667Z"
+    },
     {
       "teamId": 16,
       "teamName": "ICD-Registry",
