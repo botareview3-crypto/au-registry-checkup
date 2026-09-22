@@ -176,9 +176,9 @@ $("#noteSave").addEventListener("click", () => {
 // closed-and-reopened form doesn't lose progress.
 const checklistDrafts = {};
 let pendingChecklistTeam = null;
-const LOGIN_TYPES = ["au-registry-email", "au-domain-account"];
+const LOGIN_TYPES = ["au-registry-email", "au-domain-account", "old-au-domain-account"];
 const DEVICE_TYPES = ["hp-860-laptop", "old-domain-desktop", "dell-laptop"];
-const LOGIN_LABELS = { "au-registry-email": "African Union Registry Email", "au-domain-account": "AU Domain Account" };
+const LOGIN_LABELS = { "au-registry-email": "African Union Registry Email", "au-domain-account": "New AU Domain Account", "old-au-domain-account": "Old AU Domain Account" };
 const DEVICE_LABELS = { "hp-860-laptop": "AU New HP 860 Laptop", "old-domain-desktop": "AU Old Domain Desktop", "dell-laptop": "AU Dell Laptop" };
 
 function checklistDraftFor(team) {

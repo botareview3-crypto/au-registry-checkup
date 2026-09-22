@@ -17,7 +17,7 @@ function emptyData() {
   return { checks: {}, activity: [], doneUsers: [], customTeams: [] };
 }
 
-const LOGIN_TYPES = ["au-registry-email", "au-domain-account"];
+const LOGIN_TYPES = ["au-registry-email", "au-domain-account", "old-au-domain-account"];
 const DEVICE_TYPES = ["hp-860-laptop", "old-domain-desktop", "dell-laptop"];
 
 // Every Outlook email in this app ends in @africanunion.org - registries
