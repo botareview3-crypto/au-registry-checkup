@@ -38,6 +38,7 @@ function sanitizeChecklist(checklist) {
     office: (checklist.office || "").toString().trim().slice(0, 60),
     fullName: (checklist.fullName || "").toString().trim().slice(0, 120),
     email: (checklist.email || "").toString().trim().slice(0, 160),
+    phone: (checklist.phone || "").toString().trim().slice(0, 40),
     login: LOGIN_TYPES.includes(checklist.login) ? checklist.login : "",
     device: DEVICE_TYPES.includes(checklist.device) ? checklist.device : ""
   };

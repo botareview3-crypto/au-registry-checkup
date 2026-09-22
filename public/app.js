@@ -187,8 +187,8 @@ function checklistDraftFor(team) {
   // was saved rather than a blank form.
   if (!checklistDrafts[team.id]) {
     checklistDrafts[team.id] = team.checklist
-      ? { building: "", floor: "", office: "", fullName: "", email: "", login: "", device: "", ...team.checklist }
-      : { building: "", floor: "", office: "", fullName: "", email: "", login: "", device: "" };
+      ? { building: "", floor: "", office: "", fullName: "", email: "", phone: "", login: "", device: "", ...team.checklist }
+      : { building: "", floor: "", office: "", fullName: "", email: "", phone: "", login: "", device: "" };
   }
   return checklistDrafts[team.id];
 }
@@ -209,12 +209,13 @@ function readChecklistForm() {
     office: $("#clOffice").value.trim(),
     fullName: $("#clFullName").value.trim(),
     email: emailLocal ? `${emailLocal}${EMAIL_DOMAIN}` : "",
+    phone: $("#clPhone").value.trim(),
     login: (document.querySelector('input[name="clLogin"]:checked') || {}).value || "",
     device: (document.querySelector('input[name="clDevice"]:checked') || {}).value || ""
   };
 }
 function checklistComplete(draft) {
-  return Boolean(draft.building && draft.floor && draft.office && draft.fullName && draft.email && draft.login && draft.device);
+  return Boolean(draft.building && draft.floor && draft.office && draft.fullName && draft.email && draft.phone && draft.login && draft.device);
 }
 function openChecklistModal(team) {
   pendingChecklistTeam = team;
@@ -225,6 +226,7 @@ function openChecklistModal(team) {
   $("#clOffice").value = draft.office;
   $("#clFullName").value = draft.fullName;
   $("#clEmail").value = emailLocalPart(draft.email);
+  $("#clPhone").value = draft.phone;
   document.querySelectorAll('input[name="clLogin"]').forEach(r => { r.checked = r.value === draft.login; });
   document.querySelectorAll('input[name="clDevice"]').forEach(r => { r.checked = r.value === draft.device; });
   updateChecklistHint();
@@ -271,6 +273,7 @@ function checklistViewRows(team) {
   const rows = [
     ["Handler", c.fullName || "—"],
     ["Email", c.email || "—"],
+    ["Phone", c.phone || "—"],
     ["Location", location || "—"],
     ["Login Account Type", LOGIN_LABELS[c.login] || "—"],
     ["Assigned Device", DEVICE_LABELS[c.device] || "—"]
@@ -341,12 +344,13 @@ function exportToExcel() {
     "Office Number": team.checklist?.office || "",
     "Handler Name": team.checklist?.fullName || "",
     "Handler Email": team.checklist?.email || "",
+    "Handler Phone": team.checklist?.phone || "",
     "Login Account Type": LOGIN_LABELS[team.checklist?.login] || "",
     "Assigned Device": DEVICE_LABELS[team.checklist?.device] || "",
     Note: team.note || ""
   }));
   const ws = XLSX.utils.json_to_sheet(rows);
-  ws["!cols"] = [{ wch: 42 }, { wch: 34 }, { wch: 26 }, { wch: 9 }, { wch: 18 }, { wch: 22 }, { wch: 12 }, { wch: 14 }, { wch: 24 }, { wch: 30 }, { wch: 30 }, { wch: 22 }, { wch: 40 }];
+  ws["!cols"] = [{ wch: 42 }, { wch: 34 }, { wch: 26 }, { wch: 9 }, { wch: 18 }, { wch: 22 }, { wch: 12 }, { wch: 14 }, { wch: 24 }, { wch: 30 }, { wch: 18 }, { wch: 30 }, { wch: 22 }, { wch: 40 }];
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Registries");
 
