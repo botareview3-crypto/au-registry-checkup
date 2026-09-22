@@ -2,7 +2,8 @@
   "checks": {
     "0": {
       "checked": false,
-      "by": null
+      "by": null,
+      "note": ""
     },
     "1": {
       "checked": false,
@@ -34,6 +35,14 @@
     }
   },
   "activity": [
+    {
+      "teamId": 0,
+      "teamName": "ARBE-Registry",
+      "checked": false,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-22T09:45:12.721Z"
+    },
     {
       "teamId": 1,
       "teamName": "AUDA-Registry",
@@ -307,5 +316,6 @@
       "who": "Zemen",
       "at": "2026-09-22T09:16:41.212Z"
     }
-  ]
+  ],
+  "doneUsers": []
 }
