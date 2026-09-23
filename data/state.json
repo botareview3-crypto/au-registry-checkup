@@ -1,0 +1,1215 @@
+{
+  "checks": {
+    "0": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "8",
+        "office": "809",
+        "fullName": "Zemen Abera",
+        "email": "aberaz@africanunion.org",
+        "phone": "0911637075",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "1": {
+      "checked": true,
+      "by": "Joshua",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "7",
+        "office": "717",
+        "fullName": "Tamrat terefe",
+        "email": "tamratt@africanunion.org",
+        "phone": "0929182689",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "2": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "17",
+        "office": "1709",
+        "fullName": "Miriam",
+        "email": "miriamo@africanunion.org",
+        "phone": "000000000",
+        "login": "old-au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "3": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "11",
+        "office": "1109",
+        "fullName": "Begashaw dagnachew",
+        "email": "begashawd@africanunion.org",
+        "phone": "0911677539",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "4": {
+      "checked": false,
+      "by": null
+    },
+    "5": {
+      "checked": true,
+      "by": "Joshua",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "19",
+        "office": "1908",
+        "fullName": "Negasa nigusa",
+        "email": "negasan@africanunion.org",
+        "phone": "0911695418",
+        "login": "au-registry-email",
+        "device": "hp-860-laptop"
+      }
+    },
+    "6": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "17",
+        "office": "1715",
+        "fullName": "Luliet Getachew Ketaw",
+        "email": "lulietgk@africanunion.org",
+        "phone": "0",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "7": {
+      "checked": true,
+      "by": "Yanet",
+      "note": "",
+      "checklist": {
+        "building": "NCC",
+        "floor": "10",
+        "office": "1011",
+        "fullName": "Berhanu Asrat",
+        "email": "Asratb@africanunion.org",
+        "phone": "+251911677366",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "9": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "6",
+        "office": "609",
+        "fullName": "Yonas Amare",
+        "email": "YonasA@africanunion.org",
+        "phone": "0000000000",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "10": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "9",
+        "office": "909",
+        "fullName": "Tesfahun Getu",
+        "email": "tesfahung@africanunion.org",
+        "phone": "0911641365",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "12": {
+      "checked": true,
+      "by": "Yanet",
+      "note": "",
+      "checklist": {
+        "building": "OCC",
+        "floor": "Ground",
+        "office": "023",
+        "fullName": "Abel Kebede",
+        "email": "abellk@africanunion.org",
+        "phone": "+251911160132",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "13": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "12",
+        "office": "1209",
+        "fullName": "Girum Tadese",
+        "email": "GirumT@africanunion.org",
+        "phone": "00000000000",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "14": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "12",
+        "office": "1209",
+        "fullName": "Solomon Engdawork",
+        "email": "engdaworks@africanunion.org",
+        "phone": "000000000",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "15": {
+      "checked": true,
+      "by": "Yanet",
+      "note": "",
+      "checklist": {
+        "building": "C",
+        "floor": "3",
+        "office": "HR",
+        "fullName": "Tadesse Begashaw",
+        "email": "TadesseB@africanunion.org",
+        "phone": "+251911135648",
+        "login": "au-domain-account",
+        "device": "old-domain-desktop"
+      }
+    },
+    "16": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "5",
+        "office": "509",
+        "fullName": "Seblewongel Mulugeta",
+        "email": "seblewongelM@africanunion.org",
+        "phone": "0000000",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "17": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "14",
+        "office": "1409",
+        "fullName": "Henok Tesfaye",
+        "email": "HenokTesfaye@africanunion.org",
+        "phone": "0000000000",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "18": {
+      "checked": true,
+      "by": "Yanet",
+      "note": "",
+      "checklist": {
+        "building": "A",
+        "floor": "Ground",
+        "office": "00",
+        "fullName": "Beyene Mesele",
+        "email": "beyeneM@africanunion.org",
+        "phone": "+251911692748",
+        "login": "au-domain-account",
+        "device": "dell-laptop"
+      }
+    },
+    "19": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "B",
+        "office": "21",
+        "fullName": "Robel Haile",
+        "email": "Robelh@africanunion.org",
+        "phone": "0000000000",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "20": {
+      "checked": true,
+      "by": "Yanet",
+      "note": "",
+      "checklist": {
+        "building": "A",
+        "floor": "2",
+        "office": "Open space",
+        "fullName": "Hewan Kiflemariam",
+        "email": "hewank@africanunion.org",
+        "phone": "+251911989748",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "21": {
+      "checked": true,
+      "by": "Joshua",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "16",
+        "office": "16 09",
+        "fullName": "Mesfin Haileselassie",
+        "email": "mesfinh@africanunion.org",
+        "phone": "0913413335",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "22": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "15",
+        "office": "1509",
+        "fullName": "Zouleka",
+        "email": "zoulekaa@africanunion.org",
+        "phone": "0911241140",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "23": {
+      "checked": true,
+      "by": "Yanet",
+      "note": "",
+      "checklist": {
+        "building": "OCC",
+        "floor": "2",
+        "office": "218",
+        "fullName": "Moges Mekonnen",
+        "email": "mogesm@africanunion.org",
+        "phone": "+251911617084",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "24": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "13",
+        "office": "1302",
+        "fullName": "Tariku kebede",
+        "email": "kebedet@africanunion.org",
+        "phone": "0929084141",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "25": {
+      "checked": true,
+      "by": "Joshua",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "7",
+        "office": "708",
+        "fullName": "Eyerusalem teklu",
+        "email": "eyerusalemt@africanunion.org",
+        "phone": "0911232158",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "26": {
+      "checked": true,
+      "by": "Yanet",
+      "note": "",
+      "checklist": {
+        "building": "C",
+        "floor": "3",
+        "office": "Open space",
+        "fullName": "Meseret Getachew",
+        "email": "Meseretg@africanunion.org",
+        "phone": "+251937771151",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "27": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "M",
+        "office": "45",
+        "fullName": "Wubenat Mergia",
+        "email": "wubenatm@africanunion.org",
+        "phone": "000",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "29": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "Nyerere",
+        "floor": "3",
+        "office": "368",
+        "fullName": "Bedilu Gerbi",
+        "email": "bedilug@africanunion.org",
+        "phone": "xxx",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "30": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "13",
+        "office": "1311",
+        "fullName": "Geremew Zeleke",
+        "email": "alsemag@africanunion.org",
+        "phone": "0000000",
+        "login": "au-registry-email",
+        "device": "hp-860-laptop"
+      }
+    },
+    "31": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "15",
+        "office": "1517",
+        "fullName": "Haile michael alemu",
+        "email": "alemuh@africanunion.org",
+        "phone": "0939910343",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "32": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "5",
+        "office": "516",
+        "fullName": "Ahmad Adem",
+        "email": "AhmadA@africanunion.org",
+        "phone": "090000000",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "35": {
+      "checked": true,
+      "by": "Yanet",
+      "note": "",
+      "checklist": {
+        "building": "C",
+        "floor": "3",
+        "office": "Open space",
+        "fullName": "Sharon Adhiambo Ominde",
+        "email": "sharono@africanunion.org",
+        "phone": "+251947900229",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "36": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "11",
+        "office": "1110",
+        "fullName": "Yishake",
+        "email": "yishake@africanunion.org",
+        "phone": "0000000000",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
+    "custom-mucp10hr-8w7z": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "19",
+        "office": "1908",
+        "fullName": "Negasa Nigusa",
+        "email": "nigasan@africanunion.org",
+        "phone": "0911695418",
+        "login": "au-registry-email",
+        "device": "hp-860-laptop"
+      }
+    },
+    "custom-muco51jb-31nv": {
+      "checked": true,
+      "by": "Joshua",
+      "note": "",
+      "checklist": {
+        "building": "Paps",
+        "floor": "4",
+        "office": "459",
+        "fullName": "Nuredin Nasser",
+        "email": "nuredinn@africanunion.org",
+        "phone": "09105916",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    }
+  },
+  "activity": [
+    {
+      "teamId": 6,
+      "teamName": "EIS-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T12:20:10.506Z"
+    },
+    {
+      "teamId": 30,
+      "teamName": "PFS-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T12:09:50.804Z"
+    },
+    {
+      "teamId": 16,
+      "teamName": "ICD-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T12:06:10.828Z"
+    },
+    {
+      "teamId": 27,
+      "teamName": "OSSS-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T12:00:50.817Z"
+    },
+    {
+      "teamId": 5,
+      "teamName": "DCMP-Registry",
+      "checked": true,
+      "who": "Joshua",
+      "note": "",
+      "at": "2026-09-23T09:27:22.958Z"
+    },
+    {
+      "teamId": 20,
+      "teamName": "MISD Registry",
+      "checked": true,
+      "who": "Yanet",
+      "note": "",
+      "at": "2026-09-23T08:41:21.411Z"
+    },
+    {
+      "teamId": 9,
+      "teamName": "ETTIM-EDIT-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T08:05:55.781Z"
+    },
+    {
+      "teamId": 25,
+      "teamName": "OSPD-Registry",
+      "checked": true,
+      "who": "Joshua",
+      "note": "",
+      "at": "2026-09-23T07:55:38.637Z"
+    },
+    {
+      "teamId": "custom-muco51jb-31nv",
+      "teamName": "CMD",
+      "checked": true,
+      "who": "Joshua",
+      "note": "",
+      "at": "2026-09-23T07:55:17.604Z"
+    },
+    {
+      "teamId": 23,
+      "teamName": "OIO-Registry",
+      "checked": true,
+      "who": "Yanet",
+      "note": "",
+      "at": "2026-09-23T07:53:32.221Z"
+    },
+    {
+      "teamId": 29,
+      "teamName": "PAPS-GCPD-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T07:51:32.068Z"
+    },
+    {
+      "teamId": 19,
+      "teamName": "MHSD-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T07:45:33.876Z"
+    },
+    {
+      "teamId": 32,
+      "teamName": "Protocol-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T07:38:34.634Z"
+    },
+    {
+      "teamId": 0,
+      "teamName": "ARBE-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T07:27:22.536Z"
+    },
+    {
+      "teamId": 10,
+      "teamName": "ETTIM-IMET-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T07:25:15.732Z"
+    },
+    {
+      "teamId": 36,
+      "teamName": "WGYD-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T07:19:05.926Z"
+    },
+    {
+      "teamId": 3,
+      "teamName": "CIDO-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T07:14:04.417Z"
+    },
+    {
+      "teamId": 14,
+      "teamName": "HHS-SDCS-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T07:12:12.249Z"
+    },
+    {
+      "teamId": 13,
+      "teamName": "HHS-HHA-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T07:10:13.774Z"
+    },
+    {
+      "teamId": "custom-mucp10hr-8w7z",
+      "teamName": "CCP",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T07:06:47.154Z"
+    },
+    {
+      "teamId": 24,
+      "teamName": "OLC-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T06:51:20.563Z"
+    },
+    {
+      "teamId": 31,
+      "teamName": "PMRM-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T06:48:54.434Z"
+    },
+    {
+      "teamId": 17,
+      "teamName": "IE-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T06:45:24.050Z"
+    },
+    {
+      "teamId": 22,
+      "teamName": "Office of the Secretary to the Commission Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T06:41:12.076Z"
+    },
+    {
+      "teamId": 2,
+      "teamName": "CDCP-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T06:36:08.455Z"
+    },
+    {
+      "teamId": "custom-muco51jb-31nv",
+      "teamName": "CMD",
+      "checked": true,
+      "who": "Joshua",
+      "note": "",
+      "at": "2026-09-23T06:08:58.179Z"
+    },
+    {
+      "teamId": "custom-muco51jb-31nv",
+      "teamName": "CMD",
+      "checked": true,
+      "who": "Joshua",
+      "note": "",
+      "at": "2026-09-23T04:09:27.813Z"
+    },
+    {
+      "teamId": 25,
+      "teamName": "OSPD-Registry",
+      "checked": true,
+      "who": "Joshua",
+      "note": "",
+      "at": "2026-09-22T17:48:14.332Z"
+    },
+    {
+      "teamId": 21,
+      "teamName": "ODG-Registry",
+      "checked": true,
+      "who": "Joshua",
+      "note": "",
+      "at": "2026-09-22T17:47:52.353Z"
+    },
+    {
+      "teamId": 32,
+      "teamName": "Protocol-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-22T13:57:55.906Z"
+    },
+    {
+      "teamId": 1,
+      "teamName": "AUDA-Registry",
+      "checked": true,
+      "who": "Joshua",
+      "note": "",
+      "at": "2026-09-22T13:55:39.438Z"
+    },
+    {
+      "teamId": 25,
+      "teamName": "OSPD-Registry",
+      "checked": true,
+      "who": "Joshua",
+      "note": "",
+      "at": "2026-09-22T13:52:44.280Z"
+    },
+    {
+      "teamId": 0,
+      "teamName": "ARBE-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-22T13:51:01.498Z"
+    },
+    {
+      "teamId": 35,
+      "teamName": "SupplyChain-Registry",
+      "checked": true,
+      "who": "Yanet",
+      "note": "",
+      "at": "2026-09-22T13:49:30.617Z"
+    },
+    {
+      "teamId": 10,
+      "teamName": "ETTIM-IMET-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-22T13:47:42.842Z"
+    },
+    {
+      "teamId": 26,
+      "teamName": "OSSD-Registry",
+      "checked": true,
+      "who": "Yanet",
+      "note": "",
+      "at": "2026-09-22T13:39:49.617Z"
+    },
+    {
+      "teamId": 3,
+      "teamName": "CIDO-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-22T13:39:39.107Z"
+    },
+    {
+      "teamId": 7,
+      "teamName": "ESTI-Registry",
+      "checked": true,
+      "who": "Yanet",
+      "note": "",
+      "at": "2026-09-22T13:37:59.030Z"
+    },
+    {
+      "teamId": 24,
+      "teamName": "OLC-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-22T13:34:59.977Z"
+    },
+    {
+      "teamId": 15,
+      "teamName": "HRM-Registry",
+      "checked": true,
+      "who": "Yanet",
+      "note": "",
+      "at": "2026-09-22T13:31:59.415Z"
+    },
+    {
+      "teamId": 22,
+      "teamName": "Office of the Secretary to the Commission Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-22T13:30:00.997Z"
+    },
+    {
+      "teamId": 31,
+      "teamName": "PMRM-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-22T13:26:55.698Z"
+    },
+    {
+      "teamId": 18,
+      "teamName": "Main-Registry",
+      "checked": true,
+      "who": "Yanet",
+      "note": "",
+      "at": "2026-09-22T13:16:05.972Z"
+    },
+    {
+      "teamId": "custom-mucp10hr-8w7z",
+      "teamName": "CCP",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-22T13:15:00.870Z"
+    },
+    {
+      "teamId": "custom-mucp10hr-8w7z",
+      "teamName": "CCP",
+      "checked": false,
+      "added": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-22T13:11:51.999Z"
+    },
+    {
+      "teamId": 12,
+      "teamName": "Finance-Registry",
+      "checked": true,
+      "who": "Yanet",
+      "note": "",
+      "at": "2026-09-22T13:00:44.870Z"
+    },
+    {
+      "teamId": 29,
+      "teamName": "PAPS-GCPD-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-22T12:57:22.454Z"
+    },
+    {
+      "teamId": "custom-muco51jb-31nv",
+      "teamName": "CMD",
+      "checked": false,
+      "added": true,
+      "who": "Joshua",
+      "note": "",
+      "at": "2026-09-22T12:47:00.359Z"
+    },
+    {
+      "teamId": 0,
+      "teamName": "ARBE-Registry",
+      "checked": false,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-22T10:07:48.966Z"
+    },
+    {
+      "teamId": 0,
+      "teamName": "ARBE-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-22T10:07:47.616Z"
+    },
+    {
+      "teamId": 0,
+      "teamName": "ARBE-Registry",
+      "checked": false,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-22T09:45:14.288Z"
+    },
+    {
+      "teamId": 0,
+      "teamName": "ARBE-Registry",
+      "checked": false,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-22T09:45:12.721Z"
+    },
+    {
+      "teamId": 1,
+      "teamName": "AUDA-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:53.536Z"
+    },
+    {
+      "teamId": 3,
+      "teamName": "CIDO-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:53.266Z"
+    },
+    {
+      "teamId": 29,
+      "teamName": "PAPS-GCPD-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:52.886Z"
+    },
+    {
+      "teamId": 4,
+      "teamName": "CISSA-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:52.486Z"
+    },
+    {
+      "teamId": 29,
+      "teamName": "PAPS-GCPD-Registry",
+      "checked": true,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:52.028Z"
+    },
+    {
+      "teamId": 3,
+      "teamName": "CIDO-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:51.049Z"
+    },
+    {
+      "teamId": 1,
+      "teamName": "AUDA-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:50.296Z"
+    },
+    {
+      "teamId": 3,
+      "teamName": "CIDO-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:49.840Z"
+    },
+    {
+      "teamId": 4,
+      "teamName": "CISSA-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:49.365Z"
+    },
+    {
+      "teamId": 3,
+      "teamName": "CIDO-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:48.724Z"
+    },
+    {
+      "teamId": 1,
+      "teamName": "AUDA-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:48.438Z"
+    },
+    {
+      "teamId": 3,
+      "teamName": "CIDO-Registry",
+      "checked": true,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:47.980Z"
+    },
+    {
+      "teamId": 0,
+      "teamName": "ARBE-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:45.841Z"
+    },
+    {
+      "teamId": 7,
+      "teamName": "ESTI-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:45.631Z"
+    },
+    {
+      "teamId": 16,
+      "teamName": "ICD-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:45.447Z"
+    },
+    {
+      "teamId": 20,
+      "teamName": "MISD Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:45.186Z"
+    },
+    {
+      "teamId": 20,
+      "teamName": "MISD Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:44.455Z"
+    },
+    {
+      "teamId": 0,
+      "teamName": "ARBE-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:43.521Z"
+    },
+    {
+      "teamId": 7,
+      "teamName": "ESTI-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:42.940Z"
+    },
+    {
+      "teamId": 16,
+      "teamName": "ICD-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:42.297Z"
+    },
+    {
+      "teamId": 20,
+      "teamName": "MISD Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:41.573Z"
+    },
+    {
+      "teamId": 20,
+      "teamName": "MISD Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:24.663Z"
+    },
+    {
+      "teamId": 0,
+      "teamName": "ARBE-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:23.971Z"
+    },
+    {
+      "teamId": 7,
+      "teamName": "ESTI-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:23.667Z"
+    },
+    {
+      "teamId": 16,
+      "teamName": "ICD-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:23.489Z"
+    },
+    {
+      "teamId": 4,
+      "teamName": "CISSA-Registry",
+      "checked": true,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:21.916Z"
+    },
+    {
+      "teamId": 1,
+      "teamName": "AUDA-Registry",
+      "checked": true,
+      "who": "Joshua",
+      "at": "2026-09-22T09:35:21.240Z"
+    },
+    {
+      "teamId": 0,
+      "teamName": "ARBE-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:22:02.886Z"
+    },
+    {
+      "teamId": 20,
+      "teamName": "MISD Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:22:02.422Z"
+    },
+    {
+      "teamId": 7,
+      "teamName": "ESTI-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:22:01.902Z"
+    },
+    {
+      "teamId": 16,
+      "teamName": "ICD-Registry",
+      "checked": false,
+      "who": "Joshua",
+      "at": "2026-09-22T09:22:01.377Z"
+    },
+    {
+      "teamId": 20,
+      "teamName": "MISD Registry",
+      "checked": true,
+      "who": "Joshua",
+      "at": "2026-09-22T09:22:00.720Z"
+    },
+    {
+      "teamId": 16,
+      "teamName": "ICD-Registry",
+      "checked": true,
+      "who": "Joshua",
+      "at": "2026-09-22T09:21:59.847Z"
+    },
+    {
+      "teamId": 7,
+      "teamName": "ESTI-Registry",
+      "checked": true,
+      "who": "Joshua",
+      "at": "2026-09-22T09:21:58.999Z"
+    },
+    {
+      "teamId": 0,
+      "teamName": "ARBE-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "at": "2026-09-22T09:21:43.064Z"
+    },
+    {
+      "teamId": 0,
+      "teamName": "ARBE-Registry",
+      "checked": false,
+      "who": "Zemen",
+      "at": "2026-09-22T09:16:51.601Z"
+    },
+    {
+      "teamId": 0,
+      "teamName": "ARBE-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "at": "2026-09-22T09:16:44.729Z"
+    },
+    {
+      "teamId": 0,
+      "teamName": "ARBE-Registry",
+      "checked": false,
+      "who": "Zemen",
+      "at": "2026-09-22T09:16:44.192Z"
+    },
+    {
+      "teamId": 0,
+      "teamName": "ARBE-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "at": "2026-09-22T09:16:41.212Z"
+    }
+  ],
+  "doneUsers": [
+    "Yanet"
+  ],
+  "customTeams": [
+    {
+      "id": "custom-muco51jb-31nv",
+      "name": "CMD",
+      "email": "paps-cmd-registry@africanunion.org",
+      "title": "PAPS",
+      "initials": "C"
+    },
+    {
+      "id": "custom-mucp10hr-8w7z",
+      "name": "CCP",
+      "email": "",
+      "title": "CCP",
+      "initials": "C"
+    }
+  ]
+}
