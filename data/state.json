@@ -263,7 +263,7 @@
         "fullName": "Haile michael alemu",
         "email": "alemuh@africanunion.org",
         "phone": "0939910343",
-        "login": "old-au-domain-account",
+        "login": "au-domain-account",
         "device": "hp-860-laptop"
       }
     },
@@ -329,6 +329,14 @@
     }
   },
   "activity": [
+    {
+      "teamId": 31,
+      "teamName": "PMRM-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T06:48:54.434Z"
+    },
     {
       "teamId": 17,
       "teamName": "IE-Registry",
