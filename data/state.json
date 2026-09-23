@@ -281,9 +281,32 @@
         "login": "old-au-domain-account",
         "device": "hp-860-laptop"
       }
+    },
+    "custom-muco51jb-31nv": {
+      "checked": true,
+      "by": "Joshua",
+      "note": "",
+      "checklist": {
+        "building": "Paps",
+        "floor": "4",
+        "office": "40",
+        "fullName": "Nuredin Nasser",
+        "email": "nuredinn@africanunion.org",
+        "phone": "09105916",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
     }
   },
   "activity": [
+    {
+      "teamId": "custom-muco51jb-31nv",
+      "teamName": "CMD",
+      "checked": true,
+      "who": "Joshua",
+      "note": "",
+      "at": "2026-09-23T04:09:27.813Z"
+    },
     {
       "teamId": 25,
       "teamName": "OSPD-Registry",
