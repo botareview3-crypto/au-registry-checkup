@@ -11,7 +11,7 @@
         "fullName": "Zemen Abera",
         "email": "aberaz@africanunion.org",
         "phone": "0911637075",
-        "login": "old-au-domain-account",
+        "login": "au-domain-account",
         "device": "hp-860-laptop"
       }
     },
@@ -374,6 +374,14 @@
     }
   },
   "activity": [
+    {
+      "teamId": 0,
+      "teamName": "ARBE-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T07:27:22.536Z"
+    },
     {
       "teamId": 10,
       "teamName": "ETTIM-IMET-Registry",
