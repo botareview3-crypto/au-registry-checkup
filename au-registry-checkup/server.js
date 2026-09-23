@@ -11,7 +11,18 @@ const PING_INTERVAL_MS = 10 * 60 * 1000; // 10 minutes
 const MAX_ACTIVITY = 200;
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+// `app.js`/`styles.css` are referenced with no version query string, so
+// browsers (and any CDN/proxy in front of the host) are free to keep
+// serving a stale cached copy after a deploy, which looks exactly like
+// "the new code isn't working" even though the server has it. Force
+// revalidation on every load for those two files specifically.
+app.use(express.static(path.join(__dirname, "public"), {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith(".js") || filePath.endsWith(".css")) {
+      res.setHeader("Cache-Control", "no-cache");
+    }
+  }
+}));
 
 function emptyData() {
   return { checks: {}, activity: [], doneUsers: [], customTeams: [] };
