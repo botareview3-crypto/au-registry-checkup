@@ -128,6 +128,21 @@
       "checked": false,
       "by": null
     },
+    "17": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "14",
+        "office": "1409",
+        "fullName": "Henok Tesfaye",
+        "email": "HenokTesfaye@africanunion.org",
+        "phone": "0000000000",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
     "18": {
       "checked": true,
       "by": "Yanet",
@@ -314,6 +329,14 @@
     }
   },
   "activity": [
+    {
+      "teamId": 17,
+      "teamName": "IE-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T06:45:24.050Z"
+    },
     {
       "teamId": 22,
       "teamName": "Office of the Secretary to the Commission Registry",
