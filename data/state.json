@@ -56,7 +56,7 @@
         "fullName": "Begashaw dagnachew",
         "email": "begashawd@africanunion.org",
         "phone": "0911677539",
-        "login": "old-au-domain-account",
+        "login": "au-domain-account",
         "device": "hp-860-laptop"
       }
     },
@@ -359,6 +359,14 @@
     }
   },
   "activity": [
+    {
+      "teamId": 3,
+      "teamName": "CIDO-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T07:14:04.417Z"
+    },
     {
       "teamId": 14,
       "teamName": "HHS-SDCS-Registry",
