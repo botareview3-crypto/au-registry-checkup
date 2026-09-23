@@ -439,6 +439,21 @@
         "device": "hp-860-laptop"
       }
     },
+    "34": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "Occ",
+        "floor": "3",
+        "office": "308",
+        "fullName": "Tigist Kassanh",
+        "email": "tigist@africanunion.org",
+        "phone": "0",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
     "35": {
       "checked": true,
       "by": "Yanet",
@@ -501,6 +516,14 @@
     }
   },
   "activity": [
+    {
+      "teamId": 34,
+      "teamName": "SBOEA-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T12:35:59.931Z"
+    },
     {
       "teamId": 6,
       "teamName": "EIS-Registry",
