@@ -327,6 +327,21 @@
         "device": "hp-860-laptop"
       }
     },
+    "36": {
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "11",
+        "office": "1110",
+        "fullName": "Yishake",
+        "email": "yishake@africanunion.org",
+        "phone": "0000000000",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
+    },
     "custom-mucp10hr-8w7z": {
       "checked": true,
       "by": "Zemen",
@@ -359,6 +374,14 @@
     }
   },
   "activity": [
+    {
+      "teamId": 36,
+      "teamName": "WGYD-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T07:19:05.926Z"
+    },
     {
       "teamId": 3,
       "teamName": "CIDO-Registry",
