@@ -173,7 +173,7 @@
         "fullName": "Zouleka",
         "email": "zoulekaa@africanunion.org",
         "phone": "0911241140",
-        "login": "old-au-domain-account",
+        "login": "au-domain-account",
         "device": "hp-860-laptop"
       }
     },
@@ -314,6 +314,14 @@
     }
   },
   "activity": [
+    {
+      "teamId": 22,
+      "teamName": "Office of the Secretary to the Commission Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T06:41:12.076Z"
+    },
     {
       "teamId": 2,
       "teamName": "CDCP-Registry",
