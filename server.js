@@ -11,11 +11,27 @@ const PING_INTERVAL_MS = 10 * 60 * 1000; // 10 minutes
 const MAX_ACTIVITY = 200;
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+// `app.js`/`styles.css` are referenced with no version query string, so
+// browsers (and any CDN/proxy in front of the host) are free to keep
+// serving a stale cached copy after a deploy, which looks exactly like
+// "the new code isn't working" even though the server has it. Force
+// revalidation on every load for those two files specifically.
+app.use(express.static(path.join(__dirname, "public"), {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith(".js") || filePath.endsWith(".css")) {
+      res.setHeader("Cache-Control", "no-cache");
+    }
+  }
+}));
 
 function emptyData() {
   return { checks: {}, activity: [], doneUsers: [], customTeams: [] };
 }
+
+// Admins can edit/unmark any registry, not just their own - kept in sync
+// with the same list used client-side in public/app.js.
+const ADMIN_NAMES = ["Eyasu", "Zemen"];
+const isAdmin = name => ADMIN_NAMES.some(admin => admin.toLowerCase() === (name || "").toString().trim().toLowerCase());
 
 const LOGIN_TYPES = ["au-registry-email", "au-domain-account", "old-au-domain-account"];
 const DEVICE_TYPES = ["hp-860-laptop", "old-domain-desktop", "dell-laptop"];
@@ -177,9 +193,9 @@ app.post("/api/toggle", (req, res) => {
   const whoName = (who || "Someone").toString().trim().slice(0, 60) || "Someone";
   const current = normalizeCheck(memory.checks[teamId]);
 
-  // Only the person who checked an item may uncheck it. Checking an
-  // (already unchecked) item is always allowed.
-  if (!checked && current.checked && current.by && current.by !== whoName) {
+  // Only the person who checked an item - or an admin - may uncheck it.
+  // Checking an (already unchecked) item is always allowed.
+  if (!checked && current.checked && current.by && current.by !== whoName && !isAdmin(whoName)) {
     return res.status(403).json({ error: "locked", by: current.by });
   }
 

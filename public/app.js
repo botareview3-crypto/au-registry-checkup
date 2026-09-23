@@ -51,12 +51,23 @@ const departmentRules = [
 
 const $ = selector => document.querySelector(selector);
 
+// The hero banner used to have a hard-coded date that silently went stale
+// after the day it was written. Compute it fresh on every load instead.
+const heroDateEl = document.getElementById("heroDate");
+if (heroDateEl) heroDateEl.textContent = new Date().toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+
 const stateKey = "au-registry-checks"; // legacy cache key, still used as an offline fallback
 const userKey = "au-registry-user";
 let myName = (localStorage.getItem(userKey) || "").trim();
 let lastSeenActivityAt = localStorage.getItem("au-registry-activity-seen") || null;
 let latestActivity = [];
 let doneUsers = [];
+
+// Admins can edit or unmark ANY registry, not just the ones they personally
+// checked - everyone else is still limited to their own. Matched by name,
+// case-insensitively, same as everywhere else identity is just a typed name.
+const ADMIN_NAMES = ["Eyasu", "Zemen"];
+const isAdmin = name => ADMIN_NAMES.some(admin => admin.toLowerCase() === (name || "").trim().toLowerCase());
 
 // The checklist state lives on the server (shared across every phone/device).
 // localStorage is kept as an instant-load cache and an offline fallback.
@@ -77,6 +88,7 @@ function initials(name) {
 function renderUserChip() {
   $("#userInitials").textContent = myName ? initials(myName) : "?";
   $("#userNameLabel").textContent = myName || "Set your name";
+  $("#userChip").classList.toggle("is-admin", isAdmin(myName));
 }
 function openNameModal() { $("#nameInput").value = myName; $("#nameOverlay").classList.add("open"); $("#nameInput").focus(); }
 function closeNameModal() { $("#nameOverlay").classList.remove("open"); }
@@ -284,7 +296,7 @@ function checklistViewRows(team) {
 function openChecklistView(team) {
   pendingViewTeam = team;
   $("#checklistViewTitle").textContent = team.name;
-  $("#clViewCheckedBy").textContent = team.checkedBy ? `Checked by ${team.checkedBy}` : "";
+  $("#clViewCheckedBy").textContent = team.checkedBy ? `${team.checkedBy} saved this` : "";
   $("#checklistViewBody").innerHTML = checklistViewRows(team).map(([label, value]) => `
     <div class="cl-view-row"><span class="cl-view-label">${escapeHtml(label)}</span><span class="cl-view-value">${escapeHtml(value)}</span></div>`).join("");
   $("#checklistViewOverlay").classList.add("open");
@@ -508,8 +520,8 @@ function performToggle(team, checked, note, checklist) {
 
 function toggleTeam(team) {
   if (team.checked) {
-    // Only the person who checked an item can view/edit or unmark it.
-    if (team.checkedBy && team.checkedBy !== myName) {
+    // Only the person who checked an item - or an admin - can view/edit or unmark it.
+    if (team.checkedBy && team.checkedBy !== myName && !isAdmin(myName)) {
       showLockNotice(team);
       return;
     }
@@ -608,19 +620,19 @@ function renderGroups() {
     <article class="group-card">
       <div class="group-heading"><i class="group-color"></i><h3>${department}</h3><small>${members.length} ${members.length === 1 ? "registry" : "registries"}</small></div>
       ${members.map(team => {
-        const lockedForMe = team.checked && team.checkedBy && team.checkedBy !== myName;
+        const lockedForMe = team.checked && team.checkedBy && team.checkedBy !== myName && !isAdmin(myName);
         return `
         <div class="registry-row ${team.checked ? "checked" : ""}" data-row="${team.id}">
           <div class="initials">${team.initials}</div>
           <div class="registry-name">
             <strong>${team.name}</strong>
             <span>${team.email}</span>
-            ${team.checked && team.checkedBy ? `<span class="checked-by">Checked by ${escapeHtml(team.checkedBy)}</span>` : ""}
+            ${team.checked && team.checkedBy ? `<span class="checked-by">${escapeHtml(team.checkedBy)} saved this</span>` : ""}
             ${team.checked && team.checklist ? `<span class="checked-by note-text">${escapeHtml(team.checklist.fullName)} · ${escapeHtml(team.checklist.building)}${team.checklist.floor ? `, floor ${escapeHtml(team.checklist.floor)}` : ""}${team.checklist.office ? `, office ${escapeHtml(team.checklist.office)}` : ""}</span>` : ""}
             ${team.checked && team.note ? `<span class="checked-by note-text">“${escapeHtml(team.note)}”</span>` : ""}
           </div>
           <div class="job-title">${team.title}</div>
-          <button class="check-button ${team.checked ? "checked" : ""} ${lockedForMe ? "locked" : ""}" data-check="${team.id}" aria-label="${lockedForMe ? `Checked by ${team.checkedBy} - only they can uncheck` : `Mark ${team.name} as checked`}" title="${lockedForMe ? `Checked by ${escapeHtml(team.checkedBy)}` : ""}">${team.checked ? "✓" : ""}</button>
+          <button class="check-button ${team.checked ? "checked" : ""} ${lockedForMe ? "locked" : ""}" data-check="${team.id}" aria-label="${lockedForMe ? `Checked by ${team.checkedBy} - only they or an admin can uncheck` : `Mark ${team.name} as checked`}" title="${lockedForMe ? `Checked by ${escapeHtml(team.checkedBy)}` : ""}">${team.checked ? "✓" : ""}</button>
         </div>`;
       }).join("")}
     </article>`).join("") : `<div class="empty-state"><strong>No registries found</strong>Try another search or clear your filters.</div>`;
@@ -685,6 +697,32 @@ window.addEventListener("storage", event => {
   });
   update();
 });
+// On phone, dismissing a modal shouldn't require hunting for the tiny
+// Cancel/Close button — tapping the dimmed backdrop or pressing Esc closes
+// whichever one is open, matching how the activity panel already behaves.
+// Safe to do everywhere: checklist/add-registry field values are already
+// kept in `checklistDrafts` as you type, so closing this way never loses
+// in-progress input.
+const MODAL_CLOSERS = {
+  nameOverlay: closeNameModal,
+  noteOverlay: closeNoteModal,
+  checklistOverlay: closeChecklistModal,
+  addRegistryOverlay: closeAddRegistryModal,
+  checklistViewOverlay: closeChecklistView
+};
+Object.entries(MODAL_CLOSERS).forEach(([id, close]) => {
+  const overlay = document.getElementById(id);
+  if (!overlay) return;
+  overlay.addEventListener("click", event => { if (event.target === overlay) close(); });
+});
+document.addEventListener("keydown", event => {
+  if (event.key !== "Escape") return;
+  const openOverlay = document.querySelector(".modal-overlay.open");
+  if (openOverlay && MODAL_CLOSERS[openOverlay.id]) { MODAL_CLOSERS[openOverlay.id](); return; }
+  if ($("#activityPanel").classList.contains("open")) { closeActivityPanel(); return; }
+  if ($("#sidebar").classList.contains("open")) closeMenu();
+});
+
 update();
 renderSignoff();
 loadStateFromServer();
