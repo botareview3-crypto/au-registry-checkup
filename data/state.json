@@ -390,6 +390,14 @@
   },
   "activity": [
     {
+      "teamId": 29,
+      "teamName": "PAPS-GCPD-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T07:51:32.068Z"
+    },
+    {
       "teamId": 19,
       "teamName": "MHSD-Registry",
       "checked": true,
