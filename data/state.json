@@ -185,8 +185,19 @@
       }
     },
     "16": {
-      "checked": false,
-      "by": null
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "China",
+        "floor": "5",
+        "office": "509",
+        "fullName": "Seblewongel Mulugeta",
+        "email": "seblewongelM@africanunion.org",
+        "phone": "0000000",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
     },
     "17": {
       "checked": true,
@@ -460,6 +471,14 @@
     }
   },
   "activity": [
+    {
+      "teamId": 16,
+      "teamName": "ICD-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-23T12:06:10.828Z"
+    },
     {
       "teamId": 27,
       "teamName": "OSSS-Registry",
