@@ -61,8 +61,19 @@
       }
     },
     "4": {
-      "checked": false,
-      "by": null
+      "checked": true,
+      "by": "Zemen",
+      "note": "",
+      "checklist": {
+        "building": "a",
+        "floor": "7",
+        "office": "No",
+        "fullName": "Lensa megerssa",
+        "email": "lensam@africanunion.org",
+        "phone": "000",
+        "login": "au-domain-account",
+        "device": "hp-860-laptop"
+      }
     },
     "5": {
       "checked": true,
@@ -516,6 +527,14 @@
     }
   },
   "activity": [
+    {
+      "teamId": 4,
+      "teamName": "CISSA-Registry",
+      "checked": true,
+      "who": "Zemen",
+      "note": "",
+      "at": "2026-09-24T09:24:14.935Z"
+    },
     {
       "teamId": 34,
       "teamName": "SBOEA-Registry",
