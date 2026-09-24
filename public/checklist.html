@@ -32,10 +32,7 @@
       .cl-actions { display: flex; justify-content: flex-end; margin-top: 6px; }
       .cl-submit { height: 44px; padding: 0 24px; border: 0; border-radius: 10px; background: var(--teal); color: #fff; font: 700 13px "DM Sans", sans-serif; }
       .cl-submit:hover { background: #123f3d; }
-      @media (max-width: 850px) {
-        .checklist-shell { padding: 26px 16px 40px; } .cl-section { padding: 18px 16px 22px; }
-        .cl-field input[type="text"], .cl-field input[type="email"], .cl-field input[type="tel"] { font-size: 16px; }
-      }
+      @media (max-width: 520px) { .checklist-shell { padding: 26px 16px 40px; } .cl-section { padding: 18px 16px 22px; } }
     </style>
   </head>
   <body>
@@ -83,15 +80,15 @@
           <div class="cl-choice-group">
             <label class="cl-choice">
               <input type="radio" name="loginAccountType" value="au-registry-email" required />
-              <span>African Union Registry Email (used as user account)<small class="cl-example">e.g. DCP-Registry@africanunion.org</small></span>
+              <span>African Union Registry Email (used as user account)</span>
             </label>
             <label class="cl-choice">
               <input type="radio" name="loginAccountType" value="au-domain-account" />
-              <span>New AU Domain Account (personal AU account)<small class="cl-example">e.g. ABC@africanunion.org</small></span>
+              <span>New AU Domain Account (personal AU account)</span>
             </label>
             <label class="cl-choice">
               <input type="radio" name="loginAccountType" value="old-au-domain-account" />
-              <span>Old AU Domain Account<small class="cl-example">e.g. XYZ@african_union.org</small></span>
+              <span>Old AU Domain Account</span>
             </label>
           </div>
         </section>

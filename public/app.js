@@ -51,23 +51,12 @@ const departmentRules = [
 
 const $ = selector => document.querySelector(selector);
 
-// The hero banner used to have a hard-coded date that silently went stale
-// after the day it was written. Compute it fresh on every load instead.
-const heroDateEl = document.getElementById("heroDate");
-if (heroDateEl) heroDateEl.textContent = new Date().toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
-
 const stateKey = "au-registry-checks"; // legacy cache key, still used as an offline fallback
 const userKey = "au-registry-user";
 let myName = (localStorage.getItem(userKey) || "").trim();
 let lastSeenActivityAt = localStorage.getItem("au-registry-activity-seen") || null;
 let latestActivity = [];
 let doneUsers = [];
-
-// Admins can edit or unmark ANY registry, not just the ones they personally
-// checked - everyone else is still limited to their own. Matched by name,
-// case-insensitively, same as everywhere else identity is just a typed name.
-const ADMIN_NAMES = ["Eyasu", "Zemen"];
-const isAdmin = name => ADMIN_NAMES.some(admin => admin.toLowerCase() === (name || "").trim().toLowerCase());
 
 // The checklist state lives on the server (shared across every phone/device).
 // localStorage is kept as an instant-load cache and an offline fallback.
@@ -88,8 +77,16 @@ function initials(name) {
 function renderUserChip() {
   $("#userInitials").textContent = myName ? initials(myName) : "?";
   $("#userNameLabel").textContent = myName || "Set your name";
-  $("#userChip").classList.toggle("is-admin", isAdmin(myName));
 }
+// The header showed a hardcoded date that never changed day to day -
+// filling it in from the visitor's own clock instead so "today" is
+// always actually today.
+function renderHeroDate() {
+  const el = $("#heroDate");
+  if (!el) return;
+  el.textContent = new Date().toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+}
+renderHeroDate();
 function openNameModal() { $("#nameInput").value = myName; $("#nameOverlay").classList.add("open"); $("#nameInput").focus(); }
 function closeNameModal() { $("#nameOverlay").classList.remove("open"); }
 function saveName() {
@@ -296,7 +293,7 @@ function checklistViewRows(team) {
 function openChecklistView(team) {
   pendingViewTeam = team;
   $("#checklistViewTitle").textContent = team.name;
-  $("#clViewCheckedBy").textContent = team.checkedBy ? `${team.checkedBy} saved this` : "";
+  $("#clViewCheckedBy").textContent = team.checkedBy ? `Checked by ${team.checkedBy}` : "";
   $("#checklistViewBody").innerHTML = checklistViewRows(team).map(([label, value]) => `
     <div class="cl-view-row"><span class="cl-view-label">${escapeHtml(label)}</span><span class="cl-view-value">${escapeHtml(value)}</span></div>`).join("");
   $("#checklistViewOverlay").classList.add("open");
@@ -345,36 +342,77 @@ $("#exportButton").addEventListener("click", () => {
   exportToExcel();
 });
 function exportToExcel() {
-  const rows = teams.map(team => ({
-    Registry: team.name,
-    Email: team.email,
-    Department: departmentFor(team),
-    Checked: team.checked ? "Yes" : "No",
-    "Checked By": team.checkedBy || "",
-    Building: team.checklist?.building || "",
-    Floor: team.checklist?.floor || "",
-    "Office Number": team.checklist?.office || "",
-    "Handler Name": team.checklist?.fullName || "",
-    "Handler Email": team.checklist?.email || "",
-    "Handler Phone": team.checklist?.phone || "",
-    "Login Account Type": LOGIN_LABELS[team.checklist?.login] || "",
-    "Assigned Device": DEVICE_LABELS[team.checklist?.device] || "",
-    Note: team.note || ""
-  }));
-  const ws = XLSX.utils.json_to_sheet(rows);
-  ws["!cols"] = [{ wch: 42 }, { wch: 34 }, { wch: 26 }, { wch: 9 }, { wch: 18 }, { wch: 22 }, { wch: 12 }, { wch: 14 }, { wch: 24 }, { wch: 30 }, { wch: 18 }, { wch: 30 }, { wch: 22 }, { wch: 40 }];
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Registries");
+  const workbook = new ExcelJS.Workbook();
+  workbook.created = new Date();
 
-  const summaryWs = XLSX.utils.json_to_sheet([
-    { Field: "Date generated", Value: new Date().toLocaleString() },
-    { Field: "Total registries", Value: teams.length },
-    { Field: "Checked", Value: teams.filter(t => t.checked).length },
-    { Field: "Reviewers marked done", Value: doneUsers.join(", ") }
-  ]);
-  XLSX.utils.book_append_sheet(wb, summaryWs, "Summary");
+  // Cells for these columns come from the Registry Office Checklist, which
+  // is only filled in once a registry is checked off. Left blank (i.e. the
+  // registry is still pending), the cell gets a red fill so it's obvious
+  // at a glance in the spreadsheet which registries still need that info.
+  const RED_FILL = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFC7CE" } };
+  const checklistKeys = new Set(["building", "floor", "office", "handlerName", "handlerEmail", "handlerPhone", "login", "device"]);
 
-  XLSX.writeFile(wb, `au-registry-checkup-${new Date().toISOString().slice(0, 10)}.xlsx`);
+  const ws = workbook.addWorksheet("Registries");
+  ws.columns = [
+    { header: "Registry", key: "registry", width: 42 },
+    { header: "Email", key: "email", width: 34 },
+    { header: "Department", key: "department", width: 26 },
+    { header: "Checked", key: "checked", width: 9 },
+    { header: "Checked By", key: "checkedBy", width: 18 },
+    { header: "Building", key: "building", width: 22 },
+    { header: "Floor", key: "floor", width: 12 },
+    { header: "Office Number", key: "office", width: 14 },
+    { header: "Handler Name", key: "handlerName", width: 24 },
+    { header: "Handler Email", key: "handlerEmail", width: 30 },
+    { header: "Handler Phone", key: "handlerPhone", width: 18 },
+    { header: "Login Account Type", key: "login", width: 30 },
+    { header: "Assigned Device", key: "device", width: 22 },
+    { header: "Note", key: "note", width: 40 }
+  ];
+  ws.getRow(1).font = { bold: true };
+
+  teams.forEach(team => {
+    const row = ws.addRow({
+      registry: team.name,
+      email: team.email,
+      department: departmentFor(team),
+      checked: team.checked ? "Yes" : "No",
+      checkedBy: team.checkedBy || "",
+      building: team.checklist?.building || "",
+      floor: team.checklist?.floor || "",
+      office: team.checklist?.office || "",
+      handlerName: team.checklist?.fullName || "",
+      handlerEmail: team.checklist?.email || "",
+      handlerPhone: team.checklist?.phone || "",
+      login: LOGIN_LABELS[team.checklist?.login] || "",
+      device: DEVICE_LABELS[team.checklist?.device] || "",
+      note: team.note || ""
+    });
+    checklistKeys.forEach(key => {
+      const cell = row.getCell(key);
+      if (!cell.value) cell.fill = RED_FILL;
+    });
+  });
+
+  const summaryWs = workbook.addWorksheet("Summary");
+  summaryWs.columns = [{ header: "Field", key: "field", width: 26 }, { header: "Value", key: "value", width: 40 }];
+  summaryWs.getRow(1).font = { bold: true };
+  summaryWs.addRow({ field: "Date generated", value: new Date().toLocaleString() });
+  summaryWs.addRow({ field: "Total registries", value: teams.length });
+  summaryWs.addRow({ field: "Checked", value: teams.filter(t => t.checked).length });
+  summaryWs.addRow({ field: "Reviewers marked done", value: doneUsers.join(", ") });
+
+  workbook.xlsx.writeBuffer().then(buffer => {
+    const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `au-registry-checkup-${new Date().toISOString().slice(0, 10)}.xlsx`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  });
 }
 
 function timeAgo(iso) {
@@ -520,8 +558,8 @@ function performToggle(team, checked, note, checklist) {
 
 function toggleTeam(team) {
   if (team.checked) {
-    // Only the person who checked an item - or an admin - can view/edit or unmark it.
-    if (team.checkedBy && team.checkedBy !== myName && !isAdmin(myName)) {
+    // Only the person who checked an item can view/edit or unmark it.
+    if (team.checkedBy && team.checkedBy !== myName) {
       showLockNotice(team);
       return;
     }
@@ -620,19 +658,19 @@ function renderGroups() {
     <article class="group-card">
       <div class="group-heading"><i class="group-color"></i><h3>${department}</h3><small>${members.length} ${members.length === 1 ? "registry" : "registries"}</small></div>
       ${members.map(team => {
-        const lockedForMe = team.checked && team.checkedBy && team.checkedBy !== myName && !isAdmin(myName);
+        const lockedForMe = team.checked && team.checkedBy && team.checkedBy !== myName;
         return `
         <div class="registry-row ${team.checked ? "checked" : ""}" data-row="${team.id}">
           <div class="initials">${team.initials}</div>
           <div class="registry-name">
             <strong>${team.name}</strong>
             <span>${team.email}</span>
-            ${team.checked && team.checkedBy ? `<span class="checked-by">${escapeHtml(team.checkedBy)} saved this</span>` : ""}
+            ${team.checked && team.checkedBy ? `<span class="checked-by">Checked by ${escapeHtml(team.checkedBy)}</span>` : ""}
             ${team.checked && team.checklist ? `<span class="checked-by note-text">${escapeHtml(team.checklist.fullName)} · ${escapeHtml(team.checklist.building)}${team.checklist.floor ? `, floor ${escapeHtml(team.checklist.floor)}` : ""}${team.checklist.office ? `, office ${escapeHtml(team.checklist.office)}` : ""}</span>` : ""}
             ${team.checked && team.note ? `<span class="checked-by note-text">“${escapeHtml(team.note)}”</span>` : ""}
           </div>
           <div class="job-title">${team.title}</div>
-          <button class="check-button ${team.checked ? "checked" : ""} ${lockedForMe ? "locked" : ""}" data-check="${team.id}" aria-label="${lockedForMe ? `Checked by ${team.checkedBy} - only they or an admin can uncheck` : `Mark ${team.name} as checked`}" title="${lockedForMe ? `Checked by ${escapeHtml(team.checkedBy)}` : ""}">${team.checked ? "✓" : ""}</button>
+          <button class="check-button ${team.checked ? "checked" : ""} ${lockedForMe ? "locked" : ""}" data-check="${team.id}" aria-label="${lockedForMe ? `Checked by ${team.checkedBy} - only they can uncheck` : `Mark ${team.name} as checked`}" title="${lockedForMe ? `Checked by ${escapeHtml(team.checkedBy)}` : ""}">${team.checked ? "✓" : ""}</button>
         </div>`;
       }).join("")}
     </article>`).join("") : `<div class="empty-state"><strong>No registries found</strong>Try another search or clear your filters.</div>`;
@@ -697,32 +735,6 @@ window.addEventListener("storage", event => {
   });
   update();
 });
-// On phone, dismissing a modal shouldn't require hunting for the tiny
-// Cancel/Close button — tapping the dimmed backdrop or pressing Esc closes
-// whichever one is open, matching how the activity panel already behaves.
-// Safe to do everywhere: checklist/add-registry field values are already
-// kept in `checklistDrafts` as you type, so closing this way never loses
-// in-progress input.
-const MODAL_CLOSERS = {
-  nameOverlay: closeNameModal,
-  noteOverlay: closeNoteModal,
-  checklistOverlay: closeChecklistModal,
-  addRegistryOverlay: closeAddRegistryModal,
-  checklistViewOverlay: closeChecklistView
-};
-Object.entries(MODAL_CLOSERS).forEach(([id, close]) => {
-  const overlay = document.getElementById(id);
-  if (!overlay) return;
-  overlay.addEventListener("click", event => { if (event.target === overlay) close(); });
-});
-document.addEventListener("keydown", event => {
-  if (event.key !== "Escape") return;
-  const openOverlay = document.querySelector(".modal-overlay.open");
-  if (openOverlay && MODAL_CLOSERS[openOverlay.id]) { MODAL_CLOSERS[openOverlay.id](); return; }
-  if ($("#activityPanel").classList.contains("open")) { closeActivityPanel(); return; }
-  if ($("#sidebar").classList.contains("open")) closeMenu();
-});
-
 update();
 renderSignoff();
 loadStateFromServer();
