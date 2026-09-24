@@ -352,13 +352,22 @@ function exportToExcel() {
   const RED_FILL = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFC7CE" } };
   const checklistKeys = new Set(["building", "floor", "office", "handlerName", "handlerEmail", "handlerPhone", "login", "device"]);
 
+  // Phone numbers that are mostly placeholder zeros (e.g. "000 000 0000")
+  // or too short to be real (fewer than 5 digits) aren't useful - swap
+  // those in for a clear note instead of passing the junk value through.
+  function sanitizePhone(phone) {
+    const raw = (phone || "").trim();
+    if (!raw) return "";
+    const digits = raw.replace(/\D/g, "");
+    const zeroCount = (digits.match(/0/g) || []).length;
+    if (zeroCount > 3 || digits.length < 5) return "No number provided";
+    return raw;
+  }
+
   const ws = workbook.addWorksheet("Registries");
   ws.columns = [
     { header: "Registry", key: "registry", width: 42 },
     { header: "Email", key: "email", width: 34 },
-    { header: "Department", key: "department", width: 26 },
-    { header: "Checked", key: "checked", width: 9 },
-    { header: "Checked By", key: "checkedBy", width: 18 },
     { header: "Building", key: "building", width: 22 },
     { header: "Floor", key: "floor", width: 12 },
     { header: "Office Number", key: "office", width: 14 },
@@ -375,15 +384,12 @@ function exportToExcel() {
     const row = ws.addRow({
       registry: team.name,
       email: team.email,
-      department: departmentFor(team),
-      checked: team.checked ? "Yes" : "No",
-      checkedBy: team.checkedBy || "",
       building: team.checklist?.building || "",
       floor: team.checklist?.floor || "",
       office: team.checklist?.office || "",
       handlerName: team.checklist?.fullName || "",
       handlerEmail: team.checklist?.email || "",
-      handlerPhone: team.checklist?.phone || "",
+      handlerPhone: sanitizePhone(team.checklist?.phone),
       login: LOGIN_LABELS[team.checklist?.login] || "",
       device: DEVICE_LABELS[team.checklist?.device] || "",
       note: team.note || ""
