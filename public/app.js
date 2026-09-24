@@ -355,13 +355,17 @@ function exportToExcel() {
   // Phone numbers that are mostly placeholder zeros (e.g. "000 000 0000")
   // or too short to be real (fewer than 5 digits) aren't useful - swap
   // those in for a clear note instead of passing the junk value through.
+  // Local numbers are written with a leading 0 (e.g. 0923447817) - swap
+  // that for the +251 country code so every number in the report is in a
+  // consistent, dialable format (e.g. +251923447817).
   function sanitizePhone(phone) {
     const raw = (phone || "").trim();
     if (!raw) return "";
-    const digits = raw.replace(/\D/g, "");
+    let digits = raw.replace(/\D/g, "");
     const zeroCount = (digits.match(/0/g) || []).length;
     if (zeroCount > 3 || digits.length < 5) return "No number provided";
-    return raw;
+    if (digits.startsWith("0")) digits = `251${digits.slice(1)}`;
+    return `+${digits}`;
   }
 
   const ws = workbook.addWorksheet("Registries");
